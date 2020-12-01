@@ -7,8 +7,8 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
-    "connect-timeout": "^1.9.0"
+    "connect-timeout": "^1.9.0",
+    "express": "^4.17.1"
   },
   "engines": {
     "node": "8.x"
@@ -16,7 +16,7 @@
   "repository": {
     "url": "https://glitch.com/edit/#!/open-lovely-doom"
   },
-  "license": "Hippocratic",
+  "license": "Hippocratic-2.1",
   "keywords": [
     "glitch",
     "adventofcode",
