@@ -1,0 +1,28 @@
+{
+  "name": "open-lovely-doom",
+  "version": "2020.12.01",
+  "description": "Travis's Advent of Code 2020",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "connect-timeout": "^1.9.0"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/uopen-lovely-doom"
+  },
+  "license": "Hippocratic",
+  "keywords": [
+    "glitch",
+    "adventofcode",
+    "aoc",
+    "2020",
+    "advent-of-code",
+    "advent-of-code-2020"
+  ]
+}
