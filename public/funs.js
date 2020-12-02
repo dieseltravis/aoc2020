@@ -46,10 +46,65 @@
     },
     day2: {
       part1: data => {
-        return data;
+        let list = data.trim().split('\n');
+        //1-3 a: abcde
+        const rx = /(\d+)-(\d+)\s(\w):\s(\w+)/;
+        let input = list.map(p => {
+          let parts = p.match(rx);
+          return {
+            low: +parts[1],
+            hi: +parts[2],
+            cx: RegExp(parts[3], 'g'),
+            pass: parts[4]
+          };
+        });
+        const l = input.length;
+        let valid = 0;
+        
+        for(let i = 0; i < l; i++) {
+          let item = input[i];
+          let m = item.pass.match(item.cx) || []
+          let matches = m.length;
+          //console.log(item, m, matches);
+          if (matches >= item.low && matches <= item.hi) {
+            valid++;
+          }
+        }
+        
+        return valid;
       },
       part2: data => {
-        return data;
+        let list = data.trim().split('\n');
+        //1-3 a: abcde
+        const rx = /(\d+)-(\d+)\s(\w):\s(\w+)/;
+        let input = list.map(p => {
+          let parts = p.match(rx);
+          return {
+            low: +parts[1] - 1,
+            hi: +parts[2] - 1,
+            char: parts[3],
+            pass: parts[4]
+          };
+        });
+        const l = input.length;
+        let valid = 0;
+        
+        for(let i = 0; i < l; i++) {
+          let item = input[i];
+          let test = 0;
+          if (item.pass[item.low] === item.char) {
+            test++;
+          }
+          if (item.pass[item.hi] === item.char) {
+            test++;
+          }
+          if (test === 1) {
+            valid++;
+          }
+        }
+        
+        // not 709
+        return valid;
       }
     },
     day3: {
