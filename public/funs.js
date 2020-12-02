@@ -7,14 +7,14 @@
         let list = data.trim().split('\n').map(Number);
         let product = 0;
         const end = 2020;
+        const l = list.length;
         
-        for (let i = 0, l = list.length; i < l; i++) {
-          for (let j = 0; j < l; j++) {
+        for (let i = 0; i < l; i++) {
+          for (let j = i + 1; j < l; j++) {
             if (i !== j) {
               if (list[i] + list[j] === end) {
                 product = list[i] * list[j];
-                j = l + 1;
-                i = l + 1;
+                break;
               }
             }
           }
@@ -26,16 +26,15 @@
         let list = data.trim().split('\n').map(Number);
         let product = 0;
         const end = 2020;
+        const l = list.length;
         
-        for (let i = 0, l = list.length; i < l; i++) {
-          for (let j = 0; j < l; j++) {
-            for (let k = 0; k < l; k++) {
+        for (let i = 0; i < l; i++) {
+          for (let j = i + 1; j < l; j++) {
+            for (let k = j + 1; k < l; k++) {
               if (i !== j !== k) {
                 if (list[i] + list[j] + list[k] === end) {
                   product = list[i] * list[j] * list[k];
-                  k = l + 1;
-                  j = l + 1;
-                  i = l + 1;
+                  break;
                 }
               }
             }
