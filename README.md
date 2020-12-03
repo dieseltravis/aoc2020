@@ -8,6 +8,7 @@ also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 
 1. [day one](https://open-lovely-doom.glitch.me/day01)
 2. [day two](https://open-lovely-doom.glitch.me/day02)
+3. [day three](https://open-lovely-doom.glitch.me/day03)
 
 ## previous years:
 

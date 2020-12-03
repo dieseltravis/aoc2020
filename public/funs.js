@@ -109,10 +109,72 @@
     },
     day3: {
       part1: data => {
-        return data;
+        let forest = data.trim().split('\n').map(r => r.split(''));
+        const l = forest.length;
+        const O = '.';
+        const X = '#';
+        let left = 0;
+        const dy = 1;
+        const dx = 3;
+        let counts = { 
+          "O": 0,
+          "X": 0
+        };
+        
+        for (let i = 0 + dy; i < l; i += dy) {
+          let f = forest[i];
+          let max = f.length;
+          left = (left + dx) % max;
+          //console.log(l, i, left, f[left]);
+          if (f[left] === O) {
+            counts.O++;
+          }
+          if (f[left] === X) {
+            counts.X++;
+          }
+        }
+        
+        // not 69
+        return counts.X;
       },
       part2: data => {
-        return data;
+        let forest = data.trim().split('\n').map(r => r.split(''));
+        const l = forest.length;
+        const O = '.';
+        const X = '#';
+        
+        const d = [ // x, y
+          [1,1],
+          [3,1],
+          [5,1],
+          [7,1],
+          [1,2]
+        ];
+        const ll = d.length;
+        let trees = [0,0,0,0,0];
+        
+        for (let j = 0; j < ll; j++) {
+          let dx = d[j][0];
+          let dy = d[j][1];
+          let x = 0;
+          
+          for (let y = 0 + dy; y < l; y += dy) {
+            let f = forest[y];
+            let maxx = f.length;
+            
+            x = (x + dx) % maxx;
+            
+            console.log(j, x, maxx, y, l, f[x]);
+            
+            if (f[x] === X) {
+              trees[j]++;
+            }
+          }
+        }
+        
+        console.log(trees);
+        // not 4068413440
+        return trees.reduce((acc, item) => { return acc * item; }, 1);
       }
     },
     day4: {
@@ -253,4 +315,3 @@
 
   this.funs = funs;
 }.call(this));
-

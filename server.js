@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 const timeout = require("connect-timeout"); //express v4
 
+console.log(process.env.PROJECT_DOMAIN);
+const PROJECT_URL = `https://${process.env.PROJECT_DOMAIN}.glitch.me/`;
+console.log(PROJECT_URL);
+
 // run the same functions on the front & back
 const f = require("./public/funs");
 
