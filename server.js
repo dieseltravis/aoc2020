@@ -17,33 +17,35 @@ app.get("/", function(request, response) {
   response.sendFile(__dirname + "/views/index.html");
 });
 
-app.get("/favicon.ico", function(request, response) {
-  response.redirect("https://cdn.glitch.com/9f083ec1-8740-44e9-95e3-d1fbae530220%2Fadventofcode-pink.ico?v=1576131694059");
-  //response.sendFile(__dirname + "/assets/adventofcode-pink.ico");
-});
-
 app.use(timeout(1200000));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // bind 25 days of html files, and post functions for both parts of each
 for (let d = 1; d <= 25; d++) {
-  let day = ("" + d).padStart(2, "0");
+  // string day, leading zero
+  const dd = "" + d;
+  const day = dd.padStart(2, "0");
 
   app.get("/day" + day, function(request, response) {
     response.sendFile(__dirname + "/views/day" + day + ".html");
   });
 
   for (let p = 1; p <= 2; p++) {
+    // string part
+    const part = "" + p;
     app.post("/day" + day + "part" + p, function(request, response) {
-      const timer = "day " + d + ", part " + p;
+      // name of the timer
+      const timer = "day " + dd + ", part " + part;
       console.time(timer);
 
-      const answer = f.funs(d, p)(request.body.input);
+      // pass in string of day number and part, and send the request body's imput param to that function
+      const answer = f.funs(dd, part)(request.body.input);
 
       console.log(answer);
       console.timeEnd(timer);
 
+      // respond with the json that includes the answer
       response.status(200).json({ output: answer });
     });
   }

@@ -5,7 +5,7 @@ const process = function(funs, day, part) {
   const input = document.getElementById("input" + part);
   const answer = document.getElementById("part" + part);
   const button = document.getElementById("button" + part);
-  
+
   const onevent = function(ev) {
     // put function in a timeout so that it doesn't block UI thread
     setTimeout(function() {
