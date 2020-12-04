@@ -63,7 +63,7 @@
         
         for(let i = 0; i < l; i++) {
           let item = input[i];
-          let m = item.pass.match(item.cx) || []
+          let m = item.pass.match(item.cx) || [];
           let matches = m.length;
           //console.log(item, m, matches);
           if (matches >= item.low && matches <= item.hi) {
@@ -111,47 +111,39 @@
       part1: data => {
         let forest = data.trim().split('\n').map(r => r.split(''));
         const l = forest.length;
-        const O = '.';
         const X = '#';
-        let left = 0;
+        let x = 0;
         const dy = 1;
         const dx = 3;
-        let counts = { 
-          "O": 0,
-          "X": 0
-        };
+        let counts = 0;
         
-        for (let i = 0 + dy; i < l; i += dy) {
-          let f = forest[i];
+        for (let y = 0 + dy; y < l; y += dy) {
+          let f = forest[y];
           let max = f.length;
-          left = (left + dx) % max;
+          x = (x + dx) % max;
           //console.log(l, i, left, f[left]);
-          if (f[left] === O) {
-            counts.O++;
-          }
-          if (f[left] === X) {
-            counts.X++;
+          if (f[x] === X) {
+            counts++;
           }
         }
         
         // not 69
-        return counts.X;
+        return counts;
       },
       part2: data => {
         let forest = data.trim().split('\n').map(r => r.split(''));
         const l = forest.length;
-        const O = '.';
         const X = '#';
         
         const d = [ // x, y
-          [1,1],
-          [3,1],
-          [5,1],
-          [7,1],
-          [1,2]
+          [ 1, 1 ],
+          [ 3, 1 ],
+          [ 5, 1 ],
+          [ 7, 1 ],
+          [ 1, 2 ]
         ];
         const ll = d.length;
-        let trees = [0,0,0,0,0];
+        let trees = [ 0, 0, 0, 0, 0 ];
         
         for (let j = 0; j < ll; j++) {
           let dx = d[j][0];
@@ -164,7 +156,7 @@
             
             x = (x + dx) % maxx;
             
-            console.log(j, x, maxx, y, l, f[x]);
+            //console.log(j, x, maxx, y, l, f[x]);
             
             if (f[x] === X) {
               trees[j]++;
@@ -172,17 +164,120 @@
           }
         }
         
-        console.log(trees);
+        //console.log(trees);
         // not 4068413440
         return trees.reduce((acc, item) => { return acc * item; }, 1);
       }
     },
     day4: {
       part1: data => {
-        return data;
+        const passports = data
+          .trim()
+          .split("\n\n")
+          .map(p => p.split(/\s+/).map(a => a.split(":")[0]));
+        const required = [
+          "byr",
+          "iyr",
+          "eyr",
+          "hgt",
+          "hcl", 
+          "ecl",
+          "pid" //,
+          //"cid"
+        ];
+        const rl = required.length;
+        
+        let valid = 0;
+        const l = passports.length;
+        
+        for(let i = 0; i < l; i++) {
+          let pkeys = passports[i];
+          let pvalid = true;
+          for(let r = 0; r < rl; r++) {
+            pvalid = pvalid && pkeys.includes(required[r]);
+          }
+          
+          if (pvalid) {
+            valid++;
+          }
+        }
+        
+        return valid;
       },
       part2: data => {
-        return data;
+        const passports = data
+          .trim()
+          .split("\n\n")
+          .map(p => {
+            return { 
+                      keys: p.split(/\s+/).map(a => a.split(":")[0]),
+                      vals: p.split(/\s+/).map(a => a.split(":")[1]) 
+                    };
+          });
+        const requiredKeys = [
+          "byr",
+          "iyr",
+          "eyr",
+          "hgt",
+          "hcl", 
+          "ecl",
+          "pid" //,
+          //"cid"
+        ];
+        const rl = requiredKeys.length;
+
+        const isN = v => /^\d+$/.test(v);
+        const rxL = /^(\d+)(in|cm)$/;
+        const isL = v => {
+          let m = v.match(rxL);
+          
+          if (m) {
+            let l = +m[1];
+            if (m[2] === "in") {
+              return l >= 59 && l <= 76;
+            } else { // cm
+              return l >= 150 && l <= 193;
+            }
+          } else {
+            return false;
+          }
+        };
+        const eyes = "amb blu brn gry grn hzl oth".split(" ");
+        const requiredVals = {
+          "byr": v => { return (isN && +v >= 1920 && +v <= 2002); },
+          "iyr": v => { return (isN && +v >= 2010 && +v <= 2020); },
+          "eyr": v => { return (isN && +v >= 2020 && +v <= 2030); },
+          "hgt": v => { return isL(v); },
+          "hcl": v => { return /^\#[0-9a-f]{6}$/.test(v); }, 
+          "ecl": v => { return eyes.includes(v); },
+          "pid": v => { return /^\d{9}$/.test(v); },
+          "cid": v => { return true; }
+        };
+        
+        let valid = 0;
+        const l = passports.length;
+        
+        for(let i = 0; i < l; i++) {
+          let pass = passports[i];
+          let pvalid = true;
+          for(let r = 0; r < rl; r++) {
+            pvalid = pvalid && pass.keys.includes(requiredKeys[r]);
+          }
+          
+          if (pvalid) {
+            for (let vi = 0, vl = pass.vals.length; vi < vl; vi++) {
+              const key = pass.keys[vi];
+              const val = pass.vals[vi];
+              pvalid = pvalid && requiredVals[key](val);
+              //console.log(key, val, requiredVals[key](val));
+            }
+            if (pvalid) {
+              valid++;
+            }
+          }
+        }
+        
+        return valid;
       }
     },
     day5: {
