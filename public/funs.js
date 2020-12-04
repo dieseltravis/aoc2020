@@ -179,6 +179,7 @@
     },
     day4: {
       part1: data => {
+        
         return data;
       },
       part2: data => {
