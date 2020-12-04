@@ -171,12 +171,113 @@
     },
     day4: {
       part1: data => {
+        const passports = data
+          .trim()
+          .split("\n\n")
+          .map(p => p.split(/\s+/).map(a => a.split(":")[0]));
+        const required = [
+          "byr",
+          "iyr",
+          "eyr",
+          "hgt",
+          "hcl", 
+          "ecl",
+          "pid" //,
+          //"cid"
+        ];
+        const rl = required.length;
         
-        return data;
+        let valid = 0;
+        const l = passports.length;
+        
+        for(let i = 0; i < l; i++) {
+          let pkeys = passports[i];
+          let pvalid = true;
+          for(let r = 0; r < rl; r++) {
+            pvalid = pvalid && pkeys.includes(required[r]);
+          }
+          
+          if (pvalid) {
+            valid++;
+          }
+        }
+        
+        return valid;
       },
       part2: data => {
+        const passports = data
+          .trim()
+          .split("\n\n")
+          .map(p => {
+            return { 
+                      keys: p.split(/\s+/).map(a => a.split(":")[0]),
+                      vals: p.split(/\s+/).map(a => a.split(":")[1]) 
+                    };
+          });
+        const requiredKeys = [
+          "byr",
+          "iyr",
+          "eyr",
+          "hgt",
+          "hcl", 
+          "ecl",
+          "pid" //,
+          //"cid"
+        ];
+        const rl = requiredKeys.length;
+
+        const isN = v => /^\d+$/.test(v);
+        const rxL = /^(\d+)(in|cm)$/;
+        const isL = v => {
+          let m = v.match(rxL);
+          
+          if (m) {
+            let l = +m[1];
+            if (m[2] === "in") {
+              return l >= 59 && l <= 76;
+            } else { // cm
+              return l >= 150 && l <= 193;
+            }
+          } else {
+            return false;
+          }
+        };
+        const eyes = "amb blu brn gry grn hzl oth".split(" ");
+        const requiredVals = {
+          "byr": v => { return (isN && +v >= 1920 && +v <= 2002); },
+          "iyr": v => { return (isN && +v >= 2010 && +v <= 2020); },
+          "eyr": v => { return (isN && +v >= 2020 && +v <= 2030); },
+          "hgt": v => { return isL(v); },
+          "hcl": v => { return /^\#[0-9a-f]{6}$/.test(v); }, 
+          "ecl": v => { return eyes.includes(v); },
+          "pid": v => { return /^\d{9}$/.test(v); },
+          "cid": v => { return true; }
+        };
         
-        return data;
+        let valid = 0;
+        const l = passports.length;
+        
+        for(let i = 0; i < l; i++) {
+          let pass = passports[i];
+          let pvalid = true;
+          for(let r = 0; r < rl; r++) {
+            pvalid = pvalid && pass.keys.includes(requiredKeys[r]);
+          }
+          
+          if (pvalid) {
+            for (let vi = 0, vl = pass.vals.length; vi < vl; vi++) {
+              const key = pass.keys[vi];
+              const val = pass.vals[vi];
+              pvalid = pvalid && requiredVals[key](val);
+              //console.log(key, val, requiredVals[key](val));
+            }
+            if (pvalid) {
+              valid++;
+            }
+          }
+        }
+        
+        return valid;
       }
     },
     day5: {
