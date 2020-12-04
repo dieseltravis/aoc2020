@@ -63,7 +63,7 @@
         
         for(let i = 0; i < l; i++) {
           let item = input[i];
-          let m = item.pass.match(item.cx) || []
+          let m = item.pass.match(item.cx) || [];
           let matches = m.length;
           //console.log(item, m, matches);
           if (matches >= item.low && matches <= item.hi) {
@@ -111,47 +111,39 @@
       part1: data => {
         let forest = data.trim().split('\n').map(r => r.split(''));
         const l = forest.length;
-        const O = '.';
         const X = '#';
-        let left = 0;
+        let x = 0;
         const dy = 1;
         const dx = 3;
-        let counts = { 
-          "O": 0,
-          "X": 0
-        };
+        let counts = 0;
         
-        for (let i = 0 + dy; i < l; i += dy) {
-          let f = forest[i];
+        for (let y = 0 + dy; y < l; y += dy) {
+          let f = forest[y];
           let max = f.length;
-          left = (left + dx) % max;
+          x = (x + dx) % max;
           //console.log(l, i, left, f[left]);
-          if (f[left] === O) {
-            counts.O++;
-          }
-          if (f[left] === X) {
-            counts.X++;
+          if (f[x] === X) {
+            counts++;
           }
         }
         
         // not 69
-        return counts.X;
+        return counts;
       },
       part2: data => {
         let forest = data.trim().split('\n').map(r => r.split(''));
         const l = forest.length;
-        const O = '.';
         const X = '#';
         
         const d = [ // x, y
-          [1,1],
-          [3,1],
-          [5,1],
-          [7,1],
-          [1,2]
+          [ 1, 1 ],
+          [ 3, 1 ],
+          [ 5, 1 ],
+          [ 7, 1 ],
+          [ 1, 2 ]
         ];
         const ll = d.length;
-        let trees = [0,0,0,0,0];
+        let trees = [ 0, 0, 0, 0, 0 ];
         
         for (let j = 0; j < ll; j++) {
           let dx = d[j][0];
@@ -164,7 +156,7 @@
             
             x = (x + dx) % maxx;
             
-            console.log(j, x, maxx, y, l, f[x]);
+            //console.log(j, x, maxx, y, l, f[x]);
             
             if (f[x] === X) {
               trees[j]++;
@@ -172,7 +164,7 @@
           }
         }
         
-        console.log(trees);
+        //console.log(trees);
         // not 4068413440
         return trees.reduce((acc, item) => { return acc * item; }, 1);
       }
@@ -183,6 +175,7 @@
         return data;
       },
       part2: data => {
+        
         return data;
       }
     },
