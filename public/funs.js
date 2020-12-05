@@ -282,10 +282,128 @@
     },
     day5: {
       part1: data => {
-        return data;
+        let seats = data.trim().split('\n').map(n => { 
+          return { 
+            input: n,
+            row: n.substr(0,7).split(""),
+            seat: n.substr(7).split("")
+          }; 
+        });
+        const values = {
+          F: 0,
+          B: 1,
+          L: 0,
+          R: 1
+        };
+        const ROWS = 128;
+        const SEATS = 8;
+        let max = 0;
+        
+        let seatNums = seats.map(s => {
+          let rowID = 0;
+          let ri = 0;
+          let r = ROWS;
+          let rvs = [];
+          for (let i = 0, l = s.row.length; i < l; i++) {
+            r = r / 2;
+            let rv = r * values[s.row[i]]
+            rowID += rv;
+            rvs.push(rv);
+          }
+          
+          let seatID = 0;
+          let si = 0;
+          let c = SEATS;
+          let cvs = [];
+          for (let i = 0, l = s.seat.length; i < l; i++) {
+            c = c / 2;
+            let cv = c * values[s.seat[i]];
+            seatID += cv;
+            cvs.push(cv);
+          }
+          
+          let val = rowID * 8 + seatID;
+          max = Math.max(max, val);
+          
+          return {
+            input: s.input,
+            row: s.row,
+            seat: s.seat,
+            rowID: rowID,
+            seatID: seatID,
+            result: val,
+            rvs: rvs,
+            cvs: cvs
+          };
+        });
+        console.log(seatNums);
+        
+        return max;
       },
       part2: data => {
-        return data;
+        let seats = data.trim().split('\n').map(n => { 
+          return { 
+            input: n,
+            row: n.substr(0,7).split(""),
+            seat: n.substr(7).split("")
+          }; 
+        });
+        const values = {
+          F: 0,
+          B: 1,
+          L: 0,
+          R: 1
+        };
+        const ROWS = 128;
+        const SEATS = 8;
+        const all = [];
+        for (let i = 1000; i--;) {
+          all[i] = 0;
+        }
+        let min = Infinity;
+        
+        let seatNums = seats.map(s => {
+          let rowID = 0;
+          let ri = 0;
+          let r = ROWS;
+          let rvs = [];
+          for (let i = 0, l = s.row.length; i < l; i++) {
+            r = r / 2;
+            let rv = r * values[s.row[i]]
+            rowID += rv;
+            rvs.push(rv);
+          }
+          
+          let seatID = 0;
+          let si = 0;
+          let c = SEATS;
+          let cvs = [];
+          for (let i = 0, l = s.seat.length; i < l; i++) {
+            c = c / 2;
+            let cv = c * values[s.seat[i]];
+            seatID += cv;
+            cvs.push(cv);
+          }
+          
+          let val = rowID * 8 + seatID;
+          all[val]++;
+          min = Math.min(min, val);
+          
+          return {
+            input: s.input,
+            row: s.row,
+            seat: s.seat,
+            rowID: rowID,
+            seatID: seatID,
+            result: val
+          };
+        }).sort((a, b) => {
+          return a.result - b.result;
+        });
+        //console.log(seatNums);
+        //console.log(all);
+        
+        return all.indexOf(0, min);
       }
     },
     day6: {

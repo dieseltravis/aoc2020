@@ -10,6 +10,7 @@ also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 2. [day two](https://open-lovely-doom.glitch.me/day02)
 3. [day three](https://open-lovely-doom.glitch.me/day03)
 4. [day four](https://open-lovely-doom.glitch.me/day04)
+5. [day five](https://open-lovely-doom.glitch.me/day05)
 
 ## previous years:
 
