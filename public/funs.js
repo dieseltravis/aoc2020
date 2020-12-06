@@ -408,10 +408,49 @@
     },
     day6: {
       part1: data => {
-        return data;
+        const answers = data
+          .trim()
+          .split("\n\n")
+          .map(a => {
+            let group = a.replace(/\n/g, "")
+                      .split("");
+            let uniqueItems = [...new Set(group)];
+            //console.log(uniqueItems);
+            return uniqueItems;
+        });
+        
+        const result = answers.reduce((accumulator, currentValue) => {
+          return accumulator + currentValue.length;
+        }, 0);
+        
+        return result;
       },
       part2: data => {
-        return data;
+        const answers = data
+          .trim()
+          .split("\n\n")
+          .map(a => {
+            let group = a.split("\n");
+            return {
+              g: group,
+              gl: group.length,
+              s: group.join(""),
+              ss: group.join("").split(""),
+              u: [...new Set(group.join(""))]
+            };
+        });
+        
+        const result = answers.reduce((acc, group) => {
+          //console.log(group);
+          const count = group.u.reduce((uacc, uans) => {
+            //console.log(uans + " filter len: " + group.ss.filter(s => s === uans).length, group.ss.filter(s => s === uans));
+            return uacc + ((group.ss.filter(s => s === uans).length === group.gl) ? 1 : 0);
+          }, 0);
+          //console.log("count: " + count);
+          return acc + count;
+        }, 0);
+        
+        return result;
       }
     },
     day7: {
