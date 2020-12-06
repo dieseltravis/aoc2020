@@ -408,9 +408,11 @@
     },
     day6: {
       part1: data => {
+        
         return data;
       },
       part2: data => {
+        
         return data;
       }
     },
