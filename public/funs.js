@@ -524,7 +524,56 @@
         return bagsWithGold.length;
       },
       part2: data => {
-        return data;
+        const input = data.trim().split("\n");
+        const rx = /([a-z\s]+)\sbags\scontain\s(.+)\./;
+        //          1 parent                   2 children
+        const rxsub = /(?:(\d+)\s([a-z\s]+)\sbags?)/;  //|(no\sother\sbags)/
+        //                1 num  2 name                   3 none
+        
+        let rules = input.reduce((obj, item) => {
+          let parent = item.match(rx);
+          const bag = parent[1];
+          //console.log(parent[2]);
+          let children = parent[2].split(',').filter(c => c !== "no other bags").map(c => {
+            let m = c.trim().match(rxsub);
+            let child = {
+              "name": m[2],
+              "count": +m[1]
+            };
+            return child;
+          });
+          
+          obj[bag] = {
+            //"hasGold": false,
+            "contains": children
+          };
+          
+          return obj;
+        }, {});
+        const bagNames = Object.keys(rules);
+        
+        // find where any child is "shiny gold" and multiply
+        const findChildCount = (bagName) => {
+          const bag = rules[bagName];
+          let childCount = 0;
+          
+          if (bag.contains && bag.contains.length) {
+            for (let i = 0, l = bag.contains.length; i < l; i++) {
+              let child = bag.contains[i];
+              // count children themselves
+              childCount += child.count;
+              // count grandchildren
+              let gc = findChildCount(child.name);
+              childCount += (child.count * gc);
+            }
+          }
+          
+          return childCount;
+        };
+        
+        let goldCount = findChildCount("shiny gold");
+
+        return goldCount;
       }
     },
     day8: {
