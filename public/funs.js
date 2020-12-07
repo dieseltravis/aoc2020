@@ -455,7 +455,73 @@
     },
     day7: {
       part1: data => {
-        return data;
+        const input = data.trim().split("\n");
+        const rx = /([a-z\s]+)\sbags\scontain\s(.+)\./;
+        //          1 parent                   2 children
+        const rxsub = /(?:(\d+)\s([a-z\s]+)\sbags?)/;  //|(no\sother\sbags)/
+        //                1 num  2 name                   3 none
+        
+        let rules = input.reduce((obj, item) => {
+          let parent = item.match(rx);
+          const bag = parent[1];
+          //console.log(parent[2]);
+          let children = parent[2].split(',').filter(c => c !== "no other bags").map(c => {
+            let m = c.trim().match(rxsub);
+            let child = {
+              "name": m[2],
+              "count": +m[1]
+            };
+            return child;
+          });
+          
+          obj[bag] = {
+            //"hasGold": false,
+            "contains": children
+          };
+          
+          return obj;
+        }, {});
+        const bagNames = Object.keys(rules);
+        
+        // find where any child is "shiny gold"
+        const findGold = (bagName, hasGold) => {
+          if (bagName === "shiny gold") {
+            return true;
+          } else {
+            // if not gold, check children
+            let bag = rules[bagName]; 
+            if (bag.hasGold) {
+              // this bag was already searched
+              return true;
+            } else if (bag.contains && bag.contains.length) {
+              for (let i = 0, l = bag.contains.length; i < l; i++) {
+                hasGold = hasGold || findGold(bag.contains[i].name);
+                if (hasGold) {
+                  // stop at first gold
+                  bag.hasGold = true;
+                  return true;
+                }
+              }
+            }
+          }
+          
+          return hasGold;
+        };
+        
+        let bagsWithGold = [];  
+        for(let i = 0, l = bagNames.length; i < l; i++) {
+          if (bagNames[i] !== "shiny gold") {
+            let thisBagHasGold = findGold(bagNames[i], false);
+            if (thisBagHasGold) {
+              bagsWithGold.push(bagNames[i]);
+            }
+          }
+        }
+
+        //console.log(rules);
+        //console.log(bagsWithGold);
+
+        return bagsWithGold.length;
       },
       part2: data => {
         return data;
