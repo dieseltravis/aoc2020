@@ -578,10 +578,118 @@
     },
     day8: {
       part1: data => {
-        return data;
+        const rx = /(acc|jmp|nop)\s(\+|\-)(\d+)/;
+        const input = data.trim().split("\n").map(m => {
+          let command = m.match(rx);
+          let chg = +command[3];
+          return {
+            cmd: command[1],
+            value: (command[2] === '+') ? chg : 0 - chg,
+            history: 0
+          };
+        });
+        
+        let acc = 0;
+        let safety = 1000;
+        let pos = 0;
+        let output = null;
+        
+        while(safety--) {
+          let cmd = input[pos];
+          //console.log(cmd);
+          if (cmd.history === 1) {
+            output = acc;
+            break;
+          }
+          cmd.history++;
+          if (cmd.cmd === "acc") {
+            acc += cmd.value;
+            pos++;
+          } else if (cmd.cmd === "jmp") {
+            pos += cmd.value;
+          } else if (cmd.cmd === "nop") {
+            pos++;
+          }
+        }
+        
+        if (safety <= 0) {
+          console.warn("SAFETY hit.")
+        }
+        
+        return output;
       },
       part2: data => {
-        return data;
+        const rx = /(acc|jmp|nop)\s(\+|\-)(\d+)/;
+        const input = data.trim().split("\n").map(m => {
+          let command = m.match(rx);
+          let chg = +command[3];
+          return {
+            cmd: command[1],
+            value: (command[2] === '+') ? chg : 0 - chg,
+            history: 0
+          };
+        });
+        const il = input.length;
+        console.log("input length: " + il);
+        
+        let output = null;
+        const errCmds = ["jmp", "nop"];
+        for (let i = 0, l = errCmds.length; i < l; i++) {
+          let cmdSafety = 1000;
+          const badCmd = errCmds[i];
+          let lastIndex = -1;
+          
+          let indexOf = input.findIndex((m, idx) => idx > lastIndex && m.cmd === badCmd);
+          while (indexOf > -1 && indexOf < il && cmdSafety--) {
+            let clonedInputs = JSON.parse(JSON.stringify(input));
+            let acc = 0;
+            let safety = 1000;
+            let pos = 0;
+            output = null;
+            let isInfinite = false;
+
+            while(safety-- && !isInfinite) {
+              let cmd = clonedInputs[pos];
+              if (pos === indexOf) {
+                if (cmd.cmd === "jmp") {
+                  cmd.cmd = "nop";
+                } else if (cmd.cmd === "nop") {
+                  cmd.cmd = "jmp";
+                }
+              }
+              if (cmd.history === 1) {
+                // infinite
+                isInfinite = true;
+              }
+              cmd.history++;
+              
+              if (cmd.cmd === "acc") {
+                acc += cmd.value;
+                pos++;
+              } else if (cmd.cmd === "jmp") {
+                pos += cmd.value;
+              } else if (cmd.cmd === "nop") {
+                pos++;
+              }
+              if (pos === il) {
+                // end!
+                output = acc;
+                return output;
+              }
+            }
+            
+            lastIndex = indexOf;
+            indexOf = input.findIndex((m, idx) => idx > lastIndex && m.cmd === badCmd);
+            if (safety <= 0) {
+              console.warn("SAFETY hit.")
+            }
+          }
+          if (cmdSafety <= 0) {
+            console.warn("cmdSAFETY hit.")
+          }
+        }    
+        
+        return output;
       }
     },
     day9: {

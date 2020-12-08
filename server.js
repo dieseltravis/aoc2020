@@ -22,6 +22,15 @@ app.use(timeout(1200000));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const year = 2020;
+const days = [
+  "one", "two", "three", "four", "five",
+  "six", "seven", "eight", "nine", "ten",
+  "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+  "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
+  "twentyone", "twentytwo", "twentythree", "twentyfour", "twentyfive"
+];
+
 // bind 25 days of html files, and post functions for both parts of each
 for (let d = 1; d <= 25; d++) {
   // string day, leading zero
@@ -74,13 +83,14 @@ app.engine('ntl', (filePath, options, callback) => { // define the template engi
 });
 app.set('views', './views'); // specify the views directory
 app.set('view engine', 'ntl'); // register the template engine
+//TODO: bind this in the for loop above for each day, change html bind to redirect
 app.get('/day', (req, res) => {
   res.render('day', { 
     title: 'one', 
-    description: 'AOC 2020, day one',
+    description: "AOC " + year + ", day one",
     prev_url: "/",
     next_url: "/day/02",
-    year: "2020",
+    year: year,
     day: "01",
     day_num: "1"
   });
