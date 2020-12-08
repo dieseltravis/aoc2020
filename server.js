@@ -1,3 +1,4 @@
+var fs = require('fs');
 const express = require("express");
 const app = express();
 const timeout = require("connect-timeout"); //express v4
@@ -50,6 +51,40 @@ for (let d = 1; d <= 25; d++) {
     });
   }
 }
+
+// *beta* view template
+let dayTemplate = "";
+fs.readFile(__dirname + "/views/day.ntl", function (err, content) {
+  if (err) {
+    console.log(err);
+  }
+  dayTemplate = content.toString();
+});
+const keyFinder = /\{\{(\w+)\}\}/ig;
+const GetFormattedString = (templateString, valueObject) => {
+  return templateString.replace(keyFinder, (subString, group1 /*, offset, inputString*/) => {
+    return valueObject[group1] || "";
+  });
+};
+
+app.engine('ntl', (filePath, options, callback) => { // define the template engine
+  // this is an extremely simple template engine
+  var rendered = GetFormattedString(dayTemplate, options);
+  return callback(null, rendered);
+});
+app.set('views', './views'); // specify the views directory
+app.set('view engine', 'ntl'); // register the template engine
+app.get('/day', (req, res) => {
+  res.render('day', { 
+    title: 'one', 
+    description: 'AOC 2020, day one',
+    prev_url: "/",
+    next_url: "/day/02",
+    year: "2020",
+    day: "01",
+    day_num: "1"
+  });
+});
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
