@@ -1,3 +1,4 @@
+var fs = require('fs');
 const express = require("express");
 const app = express();
 const timeout = require("connect-timeout"); //express v4
@@ -20,6 +21,15 @@ app.get("/", function(request, response) {
 app.use(timeout(1200000));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const year = 2020;
+const days = [
+  "one", "two", "three", "four", "five",
+  "six", "seven", "eight", "nine", "ten",
+  "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+  "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
+  "twentyone", "twentytwo", "twentythree", "twentyfour", "twentyfive"
+];
 
 // bind 25 days of html files, and post functions for both parts of each
 for (let d = 1; d <= 25; d++) {
@@ -50,6 +60,41 @@ for (let d = 1; d <= 25; d++) {
     });
   }
 }
+
+// *beta* view template
+let dayTemplate = "";
+fs.readFile(__dirname + "/views/day.ntl", function (err, content) {
+  if (err) {
+    console.log(err);
+  }
+  dayTemplate = content.toString();
+});
+const keyFinder = /\{\{(\w+)\}\}/ig;
+const GetFormattedString = (templateString, valueObject) => {
+  return templateString.replace(keyFinder, (subString, group1 /*, offset, inputString*/) => {
+    return valueObject[group1] || "";
+  });
+};
+
+app.engine('ntl', (filePath, options, callback) => { // define the template engine
+  // this is an extremely simple template engine
+  var rendered = GetFormattedString(dayTemplate, options);
+  return callback(null, rendered);
+});
+app.set('views', './views'); // specify the views directory
+app.set('view engine', 'ntl'); // register the template engine
+//TODO: bind this in the for loop above for each day, change html bind to redirect
+app.get('/day', (req, res) => {
+  res.render('day', { 
+    title: 'one', 
+    description: "AOC " + year + ", day one",
+    prev_url: "/",
+    next_url: "/day/02",
+    year: year,
+    day: "01",
+    day_num: "1"
+  });
+});
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
