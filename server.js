@@ -55,6 +55,7 @@ app.set('view engine', 'ntl'); // register the template engine
 
 // bind 25 days of html files, and post functions for both parts of each
 for (let d = 1; d <= 25; d++) {
+  const digit = d;
   // string day, leading zero
   const dd = "" + d;
   const day = dd.padStart(2, "0");
@@ -67,10 +68,10 @@ for (let d = 1; d <= 25; d++) {
   
   app.get('/day/' + day, (req, res) => {
     res.render('day', { 
-      title: days[d], 
-      description: "AOC " + year + ", day " + days[d],
-      prev_url: d <= 1 ? "/" : "/day/" + ("" + (d - 1)).padStart(2, "0"),
-      next_url: d >= 25 ? "/" : "/day/" + ("" + (d + 1)).padStart(2, "0"),
+      title: days[digit], 
+      description: "AOC " + year + ", day " + days[digit],
+      prev_url: digit <= 1 ? "/" : "/day/" + ("" + (digit - 1)).padStart(2, "0"),
+      next_url: digit >= 25 ? "/" : "/day/" + ("" + (digit + 1)).padStart(2, "0"),
       year: year,
       day: day,
       day_num: dd

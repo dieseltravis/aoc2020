@@ -301,18 +301,18 @@
         
         let seatNums = seats.map(s => {
           let rowID = 0;
-          let ri = 0;
+          //let ri = 0;
           let r = ROWS;
           let rvs = [];
           for (let i = 0, l = s.row.length; i < l; i++) {
             r = r / 2;
-            let rv = r * values[s.row[i]]
+            let rv = r * values[s.row[i]];
             rowID += rv;
             rvs.push(rv);
           }
           
           let seatID = 0;
-          let si = 0;
+          //let si = 0;
           let c = SEATS;
           let cvs = [];
           for (let i = 0, l = s.seat.length; i < l; i++) {
@@ -364,18 +364,18 @@
         
         let seatNums = seats.map(s => {
           let rowID = 0;
-          let ri = 0;
+          //let ri = 0;
           let r = ROWS;
           let rvs = [];
           for (let i = 0, l = s.row.length; i < l; i++) {
             r = r / 2;
-            let rv = r * values[s.row[i]]
+            let rv = r * values[s.row[i]];
             rowID += rv;
             rvs.push(rv);
           }
           
           let seatID = 0;
-          let si = 0;
+          //let si = 0;
           let c = SEATS;
           let cvs = [];
           for (let i = 0, l = s.seat.length; i < l; i++) {
@@ -400,7 +400,7 @@
         }).sort((a, b) => {
           return a.result - b.result;
         });
-        //console.log(seatNums);
+        console.log(seatNums);
         //console.log(all);
         
         return all.indexOf(0, min);
@@ -550,7 +550,7 @@
           
           return obj;
         }, {});
-        const bagNames = Object.keys(rules);
+        //const bagNames = Object.keys(rules);
         
         // find where any child is "shiny gold" and multiply
         const findChildCount = (bagName) => {
@@ -613,7 +613,7 @@
         }
         
         if (safety <= 0) {
-          console.warn("SAFETY hit.")
+          console.warn("SAFETY hit.");
         }
         
         return output;
@@ -639,7 +639,8 @@
           const badCmd = errCmds[i];
           let lastIndex = -1;
           
-          let indexOf = input.findIndex((m, idx) => idx > lastIndex && m.cmd === badCmd);
+          const last = lastIndex;
+          let indexOf = input.findIndex((m, idx) => idx > last && m.cmd === badCmd);
           while (indexOf > -1 && indexOf < il && cmdSafety--) {
             let clonedInputs = JSON.parse(JSON.stringify(input));
             let acc = 0;
@@ -679,13 +680,14 @@
             }
             
             lastIndex = indexOf;
-            indexOf = input.findIndex((m, idx) => idx > lastIndex && m.cmd === badCmd);
+            const last2 = lastIndex;
+            indexOf = input.findIndex((m, idx) => idx > last2 && m.cmd === badCmd);
             if (safety <= 0) {
-              console.warn("SAFETY hit.")
+              console.warn("SAFETY hit.");
             }
           }
           if (cmdSafety <= 0) {
-            console.warn("cmdSAFETY hit.")
+            console.warn("cmdSAFETY hit.");
           }
         }    
         
