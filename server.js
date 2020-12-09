@@ -59,6 +59,7 @@ for (let d = 1; d <= 25; d++) {
   const dd = "" + d;
   const day = dd.padStart(2, "0");
 
+  // redirect previous urls for awhile
   app.get("/day" + day, function(request, response) {
     //response.sendFile(__dirname + "/views/day" + day + ".html");
     response.redirect("/day/" + day);

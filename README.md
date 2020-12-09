@@ -6,15 +6,15 @@ also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 
 ## solutions:
 
-1. [day one](https://open-lovely-doom.glitch.me/day01)
-2. [day two](https://open-lovely-doom.glitch.me/day02)
-3. [day three](https://open-lovely-doom.glitch.me/day03)
-4. [day four](https://open-lovely-doom.glitch.me/day04)
-5. [day five](https://open-lovely-doom.glitch.me/day05)
-6. [day six](https://open-lovely-doom.glitch.me/day06)
-7. [day seven](https://open-lovely-doom.glitch.me/day07)
-8. [day eight](https://open-lovely-doom.glitch.me/day08)
-9. [day nine](https://open-lovely-doom.glitch.me/day09)
+1. [day one](https://open-lovely-doom.glitch.me/day/01)
+2. [day two](https://open-lovely-doom.glitch.me/day/02)
+3. [day three](https://open-lovely-doom.glitch.me/day/03)
+4. [day four](https://open-lovely-doom.glitch.me/day/04)
+5. [day five](https://open-lovely-doom.glitch.me/day/05)
+6. [day six](https://open-lovely-doom.glitch.me/day/06)
+7. [day seven](https://open-lovely-doom.glitch.me/day/07)
+8. [day eight](https://open-lovely-doom.glitch.me/day/08)
+9. [day nine](https://open-lovely-doom.glitch.me/day/09)
 
 ## previous years:
 
