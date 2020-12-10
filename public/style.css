@@ -34,12 +34,8 @@ h1 {
   color: #373fff;
 }
 
-.bold {
-  font-weight: bold;
-}
-
 p {
-  max-width: 600px;
+  max-width: 40em;
 }
 
 form {
@@ -69,16 +65,22 @@ textarea {
   width: 100%;
   border: 1px solid lightgrey;
   border-radius: 3px;
+  overflow: auto;
+  font-family: monospace, monospace;
+  font-size: 1em;
 }
 
 code {
   display: block;
   margin: auto;
+  font-family: monospace, monospace;
+  font-size: 1em;
 }
 
 input[type="button"],
 input[type="submit"],
 button {
+  -webkit-appearance: button;
   display: inline-block;
   font-size: 16px;
   border-radius: 3px;
