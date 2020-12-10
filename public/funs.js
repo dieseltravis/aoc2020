@@ -807,13 +807,14 @@
       part2: data => {
         const input = data.trim().split("\n").map(Number).sort((a, b) => a - b);
         const min = 0;
-        const max = Math.max( ...input ) + 3;
+        //const max = Math.max( ...input ) + 3;
         input.unshift(min);
-        input.push(max);
+        //input.push(max);
         const l = input.length;
         console.log("input length: " + l);
         
         let count = 1;
+        let count2 = 0;
         
         console.log(input);
 
@@ -828,10 +829,11 @@
           }
           console.log(variations);
           count = variations * count;
+          count2 += variations - 1;
         }
-        console.log(count);
+        console.log(count, count2);
         
-        return count;
+        return count2;
       }
     },
     day11: {
