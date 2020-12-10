@@ -782,10 +782,14 @@
     },
     day10: {
       part1: data => {
-        return data;
+        const input = data.trim().split("\n").map(Number);
+        const l = input.length;
+        console.log("input length: " + l);
+        
+        return null;
       },
       part2: data => {
-        return data;
+        return null;
       }
     },
     day11: {
