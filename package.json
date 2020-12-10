@@ -1,7 +1,8 @@
 {
   "name": "open-lovely-doom",
-  "version": "2020.12.09",
+  "version": "2020.12.10",
   "description": "Travis's Advent of Code 2020",
+  "author": "Travis Hardiman",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
