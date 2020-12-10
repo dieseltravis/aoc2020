@@ -806,6 +806,10 @@
       },
       part2: data => {
         const input = data.trim().split("\n").map(Number).sort((a, b) => a - b);
+        const min = 0;
+        const max = Math.max( ...input ) + 3;
+        input.unshift(min);
+        input.push(max);
         const l = input.length;
         console.log("input length: " + l);
         
@@ -813,12 +817,12 @@
         
         console.log(input);
 
-        for (let i = 1; i < l; i++) {
+        for (let i = 0; i < l - 1; i++) {
           let variations = 0;
           for (let c = 1; c <= 3; c++) {
-            let prev = input[i] - c;
-            console.log(prev, c, i);
-            if (input.includes(prev)) {
+            let next = input[i] + c;
+            console.log(next, c, i);
+            if (input.includes(next)) {
               variations++;
             }
           }
