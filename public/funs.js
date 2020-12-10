@@ -782,14 +782,52 @@
     },
     day10: {
       part1: data => {
-        const input = data.trim().split("\n").map(Number);
+        const input = data.trim().split("\n").map(Number).sort((a, b) => a - b);
         const l = input.length;
         console.log("input length: " + l);
         
-        return null;
+        let counts = {
+          "1": 0,
+          "2": 0,
+          "3": 0
+        };
+        //let joltage = 0;
+        
+        for (let i = 0; i < l; i++) {
+          let prev = i > 0 ? input[i - 1] : 0;
+          counts["" + (input[i] - prev)]++;
+        }
+        counts["3"]++;
+        console.log(counts);
+        
+        // not 1608
+        // not 1632
+        return counts["1"] * counts["3"];
       },
       part2: data => {
-        return null;
+        const input = data.trim().split("\n").map(Number).sort((a, b) => a - b);
+        const l = input.length;
+        console.log("input length: " + l);
+        
+        let count = 1;
+        
+        console.log(input);
+
+        for (let i = 1; i < l; i++) {
+          let variations = 0;
+          for (let c = 1; c <= 3; c++) {
+            let prev = input[i] - c;
+            console.log(prev, c, i);
+            if (input.includes(prev)) {
+              variations++;
+            }
+          }
+          console.log(variations);
+          count = variations * count;
+        }
+        console.log(count);
+        
+        return count;
       }
     },
     day11: {
