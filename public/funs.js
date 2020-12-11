@@ -813,6 +813,7 @@
         const l = input.length;
         console.log("input length: " + l);
         
+        /*
         let count = 1;
         let count2 = 0;
         
@@ -828,13 +829,51 @@
             }
           }
           console.log(variations);
+          // this ends up double-counting some of the combinations
           count = variations * count;
+          // this doesn't work because the combinations need to be multiplied
           count2 += variations - 1;
         }
         console.log(count, count2);
         
         // broken
         return count2;
+        */
+        
+        let deltas = [];
+        // only care about the differences
+        for (let i = 1; i < l; i++) {
+          deltas.push(input[i] - input[i - 1]);
+        }
+        console.log(deltas);
+        
+        let ones = deltas.join("");
+        // there are no delta 2s?
+        // delta 3s only have one path, so they can be ignored, 1 x 1 = 1
+        // one delta in a row 1 will always just multiply by 1, 1 x 1 = 1
+        // only need the length of ones when >= 2
+        const rx = /11+/g;
+        let m = ones.match(rx);
+        console.log(m);
+        
+        // not base 2
+        //let m2 = m.map(x => Math.pow(2, x.length - 1));
+        // i think because delta ones have up to 3 options (+1, +2, +3)
+        const trib = [ // just use a static look-up instead of adding and counting or calculating
+          1, 2, 4, 7, 13, 24, 44, 81, 149, 274, 504, 927, 1705, 3136, 5768, 10609, 19513, 35890, 66012, 121415, 223317, 410744, 755476, 1389537, 2555757, 4700770, 8646064, 15902591, 29249425, 53798080, 98950096, 181997601, 334745777, 615693474, 1132436852 // jeebus I hope we don't get this high
+        ];
+        // the number of ones in a row maps to a "tribonacci" sequence of combinations
+        // each successive group of delta 1s in a row has a sum of the previous 3 combinations
+        // 1 x d1 === 1 = ( 1 + 0 + 0 )
+        // 2 x d1 === 2 = ( 1 + 1 + 0 )
+        // 3 x d1 === 4 = ( 2 + 1 + 1 )
+        // 4 x d1 === 7 = ( 4 + 2 + 1 )
+        let m2 = m.map(x => trib[x.length - 1]);
+        console.log(m2);
+        
+        // multiply the combinations
+        let result = m2.reduce((acc, v) => acc * v, 1);
+        return result;
       }
     },
     day11: {
