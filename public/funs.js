@@ -900,7 +900,73 @@
         return last.split("").filter(m => m === O).length;
       },
       part2: data => {
-        return data;
+        const input = data.trim().split("\n").map(m => m.split(''));
+        const l = input.length;
+        console.log("input length: " + l);
+        const F = '.', E = 'L', O = '#';
+        const D = [   // [dx, dy]
+          /*NW:*/ [-1, -1], /*N:*/ [0, -1], /*NE:*/ [1, -1],
+          /* W:*/ [-1, 0],                 /*E:*/ [1, 0],
+          /*SW:*/ [-1, 1], /*S:*/ [0, 1], /*SE:*/ [1, 1]
+        ];
+        const dl = D.length;
+        
+        let clone = JSON.parse(JSON.stringify(input));
+        let next = [];
+        let last = "";
+        let safety = 1000;
+        while (safety--) {
+          for (let y = 0; y < l; y++) {
+            const rl = clone[y].length;
+            next[y] = [];
+            for (let x = 0; x < rl; x++) {
+              const seat = clone[y][x];
+              next[y][x] = seat;
+              if (seat !== F) {
+                let occ = 0;
+                for (let d = 0; d < dl; d++) {
+                  let xx = x;
+                  let yy = y;
+                  let seen = F;
+                  while (seen === F) {
+                    xx += D[d][0];
+                    yy += D[d][1];
+                    if (xx >= 0 && xx < rl && yy >= 0 && yy < l) {
+                      seen = clone[yy][xx];
+                      if (seen === O) {
+                        occ++;
+                      }
+                    } else {
+                      seen = 'X';
+                    }
+                  }
+                }
+                if (seat === E && occ === 0) {
+                  next[y][x] = O;
+                } else if (seat === O && occ >= 5) {
+                  next[y][x] = E;
+                }
+              }
+            }
+          }
+          const result = next.map(m => m.join('')).join("\n");
+          //console.log(result);
+          if (last === result) {
+            break;
+          } else {
+            last = result;
+            clone = JSON.parse(JSON.stringify(next));
+            next = [];
+          }
+        }
+        console.log(1000 - safety);
+        if (safety <= 0) {
+          console.warn("SAFETY hit.");
+        }
+        
+        console.log(last);
+        
+        return last.split("").filter(m => m === O).length;
       }
     },
     day12: {
