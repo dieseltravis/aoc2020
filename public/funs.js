@@ -884,8 +884,8 @@
         const F = '.', E = 'L', O = '#';
         const D = [   // [dx, dy]
           /*NW:*/ [-1, -1], /*N:*/ [0, -1], /*NE:*/ [1, -1],
-          /* W:*/ [-1, 0],                 /*E:*/ [1, 0],
-          /*SW:*/ [-1, 1], /*S:*/ [0, 1], /*SE:*/ [1, 1]
+          /* W:*/ [-1,  0],                 /* E:*/ [1,  0],
+          /*SW:*/ [-1,  1], /*S:*/ [0,  1], /*SE:*/ [1,  1]
         ];
         const dl = D.length;
         
@@ -945,8 +945,8 @@
         const F = '.', E = 'L', O = '#';
         const D = [   // [dx, dy]
           /*NW:*/ [-1, -1], /*N:*/ [0, -1], /*NE:*/ [1, -1],
-          /* W:*/ [-1, 0],                 /*E:*/ [1, 0],
-          /*SW:*/ [-1, 1], /*S:*/ [0, 1], /*SE:*/ [1, 1]
+          /* W:*/ [-1,  0],                 /* E:*/ [1,  0],
+          /*SW:*/ [-1,  1], /*S:*/ [0,  1], /*SE:*/ [1,  1]
         ];
         const dl = D.length;
         
@@ -1010,10 +1010,134 @@
     },
     day12: {
       part1: data => {
-        return data;
+        const rx = /([A-Z])(\d+)/;
+        const input = data.trim().split("\n").map(m => {
+          let cmd = m.match(rx);
+          return {
+            action: cmd[1],
+            value: +cmd[2]
+          }
+        });
+        const l = input.length;
+        console.log("input length: " + l);
+        let pos = { x: 0, y: 0 };
+        const D = [   // [dx, dy]
+          /*N:*/ [ 0, -1], 
+          /*E:*/ [ 1,  0],
+          /*S:*/ [ 0,  1],
+          /*W:*/ [-1,  0]
+        ];
+        let d = 1; // E
+        let dir = D[d];  // E
+        
+        for (let i = 0; i < l; i++) {
+          let cmd = input[i];
+          //console.log("command: ", cmd, " direction: ", d, " delta: ", dir);
+          if (cmd.action === 'R') { //CW
+            d = (d + (cmd.value / 90)) % 4;
+            dir = D[d];
+          } else if (cmd.action === 'L') { // CCW
+            d = (d + ((360 - cmd.value) / 90)) % 4;
+            dir = D[d];
+          } else if (cmd.action === 'N') {
+            dir = D[0];
+            pos.x += (cmd.value * dir[0]);
+            pos.y += (cmd.value * dir[1]);
+          } else if (cmd.action === 'E') {
+            dir = D[1];
+            pos.x += (cmd.value * dir[0]);
+            pos.y += (cmd.value * dir[1]);
+          } else if (cmd.action === 'S') {
+            dir = D[2];
+            pos.x += (cmd.value * dir[0]);
+            pos.y += (cmd.value * dir[1]);
+          } else if (cmd.action === 'W') {
+            dir = D[3];
+            pos.x += (cmd.value * dir[0]);
+            pos.y += (cmd.value * dir[1]);
+          } else if (cmd.action === 'F') {
+            // use last dir
+            dir = D[d];
+            pos.x += (cmd.value * dir[0]);
+            pos.y += (cmd.value * dir[1]);
+          }
+          //console.log("position:", pos);
+        }
+        
+        console.log(pos);
+        
+        return Math.abs(pos.x) + Math.abs(pos.y);
       },
       part2: data => {
-        return data;
+        const rx = /([A-Z])(\d+)/;
+        const input = data.trim().split("\n").map(m => {
+          let cmd = m.match(rx);
+          return {
+            action: cmd[1],
+            value: +cmd[2]
+          }
+        });
+        const l = input.length;
+        console.log("input length: " + l);
+        let pos = { x: 0, y: 0 };
+        const D = [   // [dx, dy]
+          /*N:*/ [ 0, -1], 
+          /*E:*/ [ 1,  0],
+          /*S:*/ [ 0,  1],
+          /*W:*/ [-1,  0]
+        ];
+        let d = 1; // E
+        let dir = D[d];  // E
+        let way = { dx: 10, dy: -1 };
+        const rotate = q => {
+          if (q === 1) {
+            way = {
+              dx: (-1 * way.dy),
+              dy: way.dx
+            };
+          } else if (q === 2) {
+            way = {
+              dx: -1 * way.dx,
+              dy: -1 * way.dy
+            };
+          } else if (q === 3) {
+            way = {
+              dx: way.dy,
+              dy: (-1 * way.dx)
+            };
+          }
+        };
+        
+        for (let i = 0; i < l; i++) {
+          let cmd = input[i];
+          if (cmd.action === 'R') { //CW
+            rotate((cmd.value / 90) % 4);
+          } else if (cmd.action === 'L') { // CCW
+            rotate((360 - cmd.value / 90) % 4);
+          } else if (cmd.action === 'N') {
+            dir = D[0];
+            way.dy += (cmd.value * dir[1]);
+          } else if (cmd.action === 'E') {
+            dir = D[1];
+            way.dx += (cmd.value * dir[0]);
+          } else if (cmd.action === 'S') {
+            dir = D[2];
+            way.dy += (cmd.value * dir[1]);
+          } else if (cmd.action === 'W') {
+            dir = D[3];
+            way.dx += (cmd.value * dir[0]);
+          } else if (cmd.action === 'F') {
+            pos.x += (cmd.value * way.dx);
+            pos.y += (cmd.value * way.dy);
+          }
+          //console.log("command: ", cmd, " waypoint: ", way);
+          //console.log("position:", pos);
+        }
+        
+        console.log(pos);
+        
+        // 34949 is too low
+        return Math.abs(pos.x) + Math.abs(pos.y);
       }
     },
     day13: {
