@@ -1016,7 +1016,7 @@
           return {
             action: cmd[1],
             value: +cmd[2]
-          }
+          };
         });
         const l = input.length;
         console.log("input length: " + l);
@@ -1075,7 +1075,7 @@
           return {
             action: cmd[1],
             value: +cmd[2]
-          }
+          };
         });
         const l = input.length;
         console.log("input length: " + l);
