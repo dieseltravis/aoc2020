@@ -1,4 +1,4 @@
-dieseltravis/aoc2020 Copyright 2020 Travis Hardiman (“Licensor”)
+dieseltravis/aoc2020 open-lovely-doom Copyright 2020 Travis Hardiman (“Licensor”)
 
 Hippocratic License Version Number: 2.1.
 
