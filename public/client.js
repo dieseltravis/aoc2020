@@ -16,7 +16,7 @@ const process = function(funs, day, part) {
       answer.innerText = funs(day, part)(input.value);
 
       console.timeEnd(timer);
-    }, 20);
+    }, 21);
   };
 
   button.addEventListener("click", onevent);

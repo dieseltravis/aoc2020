@@ -1,8 +1,9 @@
 {
   "name": "open-lovely-doom",
-  "version": "2020.12.11",
+  "version": "2020.12.13",
   "description": "Travis's Advent of Code 2020",
   "author": "Travis Hardiman",
+  "homepage": "https://open-lovely-doom.glitch.me/",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -25,5 +26,11 @@
     "2020",
     "advent-of-code",
     "advent-of-code-2020"
+  ],
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "supports es6-module",
+    "maintained node versions"
   ]
 }

@@ -813,7 +813,7 @@
         const l = input.length;
         console.log("input length: " + l);
         
-        /*
+        /* this part 2 was a bit ridiculous, this whole block is wrong
         let count = 1;
         let count2 = 0;
         
@@ -1016,7 +1016,7 @@
           return {
             action: cmd[1],
             value: +cmd[2]
-          }
+          };
         });
         const l = input.length;
         console.log("input length: " + l);
@@ -1075,7 +1075,7 @@
           return {
             action: cmd[1],
             value: +cmd[2]
-          }
+          };
         });
         const l = input.length;
         console.log("input length: " + l);
@@ -1142,9 +1142,98 @@
     },
     day13: {
       part1: data => {
-        return data;
+        const input = data.trim().split("\n");
+        const timestamp = +input[0];
+        const buses = input[1].split(',').filter(f => f !== 'x').map(b => {
+          return {
+            bus: +b,
+            past: null,
+            diff: null
+          };
+        });
+        
+        let min = Infinity;
+        
+        for (let i = 0, l = buses.length; i < l; i++) {
+          let bus = buses[i].bus;
+          //console.log(bus);
+          let close = timestamp / bus;
+          //console.log(bus);
+          let past = (Math.floor(close) + 1) * bus;
+          //console.log(past);
+          min = Math.min(min, past);
+          buses[i].past = past;
+          buses[i].diff = past - timestamp;
+        }
+        let result = buses.filter(b => b.past === min)[0];
+        console.log(result);
+        
+        return result.bus * result.diff;
       },
-      part2: data => {}
+      part2: data => {
+        const input = data.trim().split("\n");
+        /*
+        const buses = input[1].split(',').map(b => {
+          const isX = b === 'x';
+          return {
+            isX: isX,
+            bus: isX ? null : +b
+          };
+        });
+        */
+        let xCount = 0;
+        const buses2 = input[1].split(',').map((b, i) => {
+          const isX = b === 'x';
+          const item = {
+            isX: isX,
+            bus: isX ? null : +b,
+            x: xCount,
+            i: i
+          };
+          if (isX) {
+            xCount++;
+          } else {
+            xCount = 0;
+          }
+          return item;
+        }).filter(b => !b.isX);
+        const len = buses2.reduce((a, b) => a + b.x, 0) + buses2.length; 
+        console.log(buses2, len);
+        
+        //const first = 1;
+        // this still takes too long
+        const first = 100035869999992;
+        const start = Math.floor(first / buses2[0].bus) * buses2[0].bus;
+        console.log("starting at: ", start);
+        let t = start;
+        let safety = 1000000000;
+        while (safety--) {
+          // always start at next first bus
+          t += buses2[0].bus;
+          let timestamp = t;
+          for (let i = 0, l = buses2.length; i < l; i++) {
+            let close = 0;
+            const bus = buses2[i];
+            close = (timestamp + bus.i) % bus.bus;
+            if (close === 0) {
+              if (i === l - 1) {
+                console.log(t)
+                return t;
+              }
+              //timestamp;
+            } else {
+              //t = timestamp;
+              i = l + 1;
+            }
+          }
+        }
+        
+        if (safety <= 0) {
+          console.warn("SAFETY hit.");
+        }
+                
+        return t;
+      }
     },
     day14: {
       part1: data => {  
