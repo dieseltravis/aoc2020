@@ -1256,10 +1256,116 @@
       }
     },
     day14: {
-      part1: data => {  
+      part1: data => {
+        // mask = 00X0000110110X000110010101XX0X010001
+        // mem[9507] = 7
+        const rx = /^(mask|mem)(?:\[(\d+)\])?\s=\s(?:([X01]{36})|(\d+))/;
+        const input = data.trim().split("\n").map(m => {
+          const matched = m.match(rx);
+          //console.log(matched);
+          return {
+            cmd: matched[1],
+            isMask: matched[1] === "mask",
+            addr: +matched[2],
+            mask: matched[3],
+            value: +matched[4],
+            bval: (+matched[4]).toString(2).padStart(36, '0')
+          };
+        });
+        const l = input.length;
+        console.log("input length: " + l);
+        const maskBits = (mask, bits) => {
+          let newbits = [];
+          //console.log(mask, bits, parseInt(bits), 2);
+          for (let i = mask.length; i--;) {
+            newbits[i] = (mask[i] === 'X') ? bits[i] : mask[i];
+          }
+          return parseInt(newbits.join(""), 2);
+        };
+        
+        let mask = "";
+        const result = input.reduce((mem, cmd) => {
+          //console.log("cmd: ", cmd);
+          if (cmd.isMask) {
+            mask = cmd.mask;
+          } else {
+            mem[cmd.addr] = maskBits(mask, cmd.bval);
+          }
+          
+          return mem;
+        }, []);
+        console.log(result);
+        
+        const sum = result.filter(v => v).reduce((a, v) => a + v, 0);
+        return sum;
       },
       part2: data => {
+        // mask = 00X0000110110X000110010101XX0X010001
+        // mem[9507] = 7
+        const rx = /^(mask|mem)(?:\[(\d+)\])?\s=\s(?:([X01]{36})|(\d+))/;
+        const input = data.trim().split("\n").map(m => {
+          const matched = m.match(rx);
+          //console.log(matched);
+          return {
+            cmd: matched[1],
+            isMask: matched[1] === "mask",
+            addr: +matched[2],
+            mask: matched[3],
+            value: +matched[4],
+            // part 2 encode the addr as binary
+            bval: (+matched[2]).toString(2).padStart(36, '0')
+          };
+        });
+        const l = input.length;
+        console.log("input length: " + l);
+        const maskBits = (mask, bits, mem, val) => {
+          let newbits = [];
+          //console.log(mask, bits, parseInt(bits), 2);
+          for (let i = mask.length; i--;) {
+            newbits[i] = (mask[i] === '0') ? bits[i] : mask[i];
+          }
+          let strbits = newbits.join("");
+          let vals = [];
+          let indexOfX = strbits.indexOf('X');
+          while (indexOfX > -1) {
+            if (vals.length === 0) {
+              vals.push(strbits.substr(0, indexOfX) + "0" + strbits.substr(indexOfX + 1));
+              vals.push(strbits.substr(0, indexOfX) + "1" + strbits.substr(indexOfX + 1));
+            } else {
+              let newVals = [];
+              for (let i = 0, vl = vals.length; i < vl; i++) {
+                const thisBits = vals[i];
+                newVals.push(thisBits.substr(0, indexOfX) + "0" + thisBits.substr(indexOfX + 1));
+                newVals.push(thisBits.substr(0, indexOfX) + "1" + thisBits.substr(indexOfX + 1));
+              }
+              vals = newVals;
+            }
+            indexOfX = strbits.indexOf('X', indexOfX + 1);
+          }
+          
+          for (let i = 0, vl = vals.length; i < vl; i++) {
+            mem[parseInt(vals[i], 2)] = val; 
+          }
+          return mem;
+        };
         
+        let mask = "";
+        const result = input.reduce((mem, cmd) => {
+          //console.log("cmd: ", cmd);
+          if (cmd.isMask) {
+            mask = cmd.mask;
+          } else {
+            mem = maskBits(mask, cmd.bval, mem, cmd.value);
+          }
+          
+          return mem;
+        }, []);
+        //console.log(result);
+        
+        const sum = result.filter(v => v).reduce((a, v) => a + v, 0);
+        
+        console.log(sum);
+        return sum;
       }
     },
     day15: { 
