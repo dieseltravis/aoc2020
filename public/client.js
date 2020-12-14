@@ -2,11 +2,13 @@
 
 const process = function(funs, day, part) {
   const timer = "day " + day + ", part " + part;
+  const html = document.querySelector("html");
   const input = document.getElementById("input" + part);
   const answer = document.getElementById("part" + part);
   const button = document.getElementById("button" + part);
 
   const onevent = function(ev) {
+    html.classList.add("wait");
     // put function in a timeout so that it doesn't block UI thread
     setTimeout(function() {
       console.info("starting...", new Date());
@@ -16,6 +18,7 @@ const process = function(funs, day, part) {
       answer.innerText = funs(day, part)(input.value);
 
       console.timeEnd(timer);
+      html.classList.remove("wait");
     }, 21);
   };
 

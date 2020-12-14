@@ -1172,15 +1172,6 @@
       },
       part2: data => {
         const input = data.trim().split("\n");
-        /*
-        const buses = input[1].split(',').map(b => {
-          const isX = b === 'x';
-          return {
-            isX: isX,
-            bus: isX ? null : +b
-          };
-        });
-        */
         let xCount = 0;
         const buses2 = input[1].split(',').map((b, i) => {
           const isX = b === 'x';
@@ -1202,11 +1193,12 @@
         
         //const first = 1;
         // this still takes too long
-        const first = 100035869999992;
-        const start = Math.floor(first / buses2[0].bus) * buses2[0].bus;
-        console.log("starting at: ", start);
-        let t = start;
+        //const first = 100035869999992;
+        //1658065791492211
+        const first = 100000000000000;
+        //const first = 0;
         let safety = 1000000000;
+        /* way too slow
         while (safety--) {
           // always start at next first bus
           t += buses2[0].bus;
@@ -1227,12 +1219,40 @@
             }
           }
         }
+        */
+        const l = buses2.length;
+        const allBuses = (b) => {
+          return b.i % b.bus;
+        };
+        //const firstVal = buses2[0].bus;
+        const bigVal = buses2.reduce((a, b) => Math.max(a, b.bus), 0);
+        const bigBus = buses2.filter(b => b.bus === bigVal)[0];
+        console.log(bigVal, "biggest bus ", bigBus);
+        
+        //const start = Math.floor(first / buses2[0].bus) * buses2[0].bus;
+        const start = Math.floor(first / bigBus.bus) * bigBus.bus - bigBus.i;
+        console.log("starting at: ", start);
+        let t = start;
+
+        //buses2.shift(); // don't need first bus
+        // this still takes too long with 9 values
+        let timestamp = 0;
+        while (safety--) {
+          //const timestamp = t * firstVal;
+          // count by the biggest value
+          timestamp = (t * bigVal) - bigBus.i;
+          if (buses2.every((b) => ((timestamp + b.i) % b.bus) === 0)) {
+            return timestamp;
+          }
+          t++;
+        }
+        console.log("t: ", t, "timestamp: ", timestamp);
         
         if (safety <= 0) {
           console.warn("SAFETY hit.");
         }
-                
-        return t;
+        
+        return timestamp;
       }
     },
     day14: {
