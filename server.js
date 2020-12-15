@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const year = 2020;
-const days = [  "zero",
+const days = [ "zero",
   "one", "two", "three", "four", "five",
   "six", "seven", "eight", "nine", "ten",
   "eleven", "twelve", "thirteen", "fourteen", "fifteen",
@@ -38,6 +38,8 @@ fs.readFile(__dirname + "/views/day.ntl", function (err, content) {
   }
   dayTemplate = content.toString();
 });
+
+// this template-replacer code keeps working
 const keyFinder = /\{\{(\w+)\}\}/ig;
 const GetFormattedString = (templateString, valueObject) => {
   return templateString.replace(keyFinder, (subString, group1 /*, offset, inputString*/) => {

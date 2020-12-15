@@ -1197,7 +1197,7 @@
         //1658065791492211
         const first = 100000000000000;
         //const first = 0;
-        let safety = 1000000000;
+        let safety = 100000000000000;
         /* way too slow
         while (safety--) {
           // always start at next first bus
@@ -1370,8 +1370,97 @@
     },
     day15: { 
       part1: data => {
+        const input = data.trim().split(",").map(Number);
+        const l = input.length;
+        console.log("input length: " + l);
+        const limit = 2020 - l;
+        //const limit = 10 - l;
+        const history = {};
+        const toc = [];
+        let last = null;
+        
+        for (let i = 0; i < l; i++) {
+          const current = input[i];
+          const turn = i + 1;
+          if (history[current] && history[current].length > 0) {
+            // 1 based
+            history[current].push(turn);
+          } else {
+            history[current] = [];
+            history[current].push(turn);
+          }
+          toc.push(current);
+          last = current;
+        }
+        
+        for (let i = 0; i < limit; i++) {
+          //console.log(last);
+          let current = 0;
+          const turn = i + l + 1;
+          if (history[last] && history[last].length >= 2) {
+            //console.log(JSON.stringify(history), JSON.stringify(history[last]));
+            const last2 = history[last].slice(-2);
+            //console.log(last2);
+            current = last2[1] - last2[0];
+          }
+          
+          if (history[current] && history[current].length > 0) {
+            // 1 based
+            history[current].push(turn);
+          } else {
+            history[current] = [];
+            history[current].push(turn);
+          }
+          toc.push(current);
+          last = current;
+        }
+        console.log(toc, history);
+        
+        return last;
       },
-      part2: data => {}
+      part2: data => {
+        const input = data.trim().split(",").map(Number);
+        const l = input.length;
+        console.log("input length: " + l);
+        const limit = 30000000 - l;
+        const history = {};
+        let last = null;
+        
+        for (let i = 0; i < l; i++) {
+          const current = input[i];
+          // 1 based
+          const turn = i + 1;
+          if (history[current] && history[current].length > 0) {
+            history[current].push(turn);
+          } else {
+            history[current] = [];
+            history[current].push(turn);
+          }
+          last = current;
+        }
+        
+        for (let i = 0; i < limit; i++) {
+          let current = 0;
+          // 1 based
+          const turn = i + l + 1;
+          if (history[last] && history[last].length >= 2) {
+            const last2 = history[last].slice(-2);
+            current = last2[1] - last2[0];
+          }
+          
+          if (history[current] && history[current].length > 0) {
+            history[current].push(turn);
+            // save RAM: 
+            history[current].unshift();
+          } else {
+            history[current] = [];
+            history[current].push(turn);
+          }
+          last = current;
+        }
+        
+        return last;
+      }
     },
     day16: {
       part1: data => {},

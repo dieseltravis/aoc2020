@@ -20,6 +20,7 @@ also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 12. [day twelve](https://open-lovely-doom.glitch.me/day/12)
 13. [day thirteen](https://open-lovely-doom.glitch.me/day/13) (part 2 takes too long)
 14. [day fourteen](https://open-lovely-doom.glitch.me/day/14) (part 2 takes too long)
+15. [day fifteen](https://open-lovely-doom.glitch.me/day/15)
 
 ## previous years:
 
