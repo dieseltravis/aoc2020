@@ -1195,8 +1195,8 @@
         // this still takes too long
         //const first = 100035869999992;
         //1658065791492211
-        const first = 100000000000000;
-        //const first = 0;
+        //const first = 100000000000000;
+        const first = 0;
         let safety = 100000000000000;
         /* way too slow
         while (safety--) {
@@ -1252,6 +1252,7 @@
           console.warn("SAFETY hit.");
         }
         
+        // 99468381574216660 is too high
         return timestamp;
       }
     },
