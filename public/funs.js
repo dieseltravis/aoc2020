@@ -1467,8 +1467,16 @@
       }
     },
     day16: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        const input = data.trim().split("\n").map(m => m.split(''));
+        const l = input.length;
+        console.log("input length: " + l);
+        
+        return null;
+      },
+      part2: data => {
+        
+      }
     },
     day17: {
       part1: data => {},
