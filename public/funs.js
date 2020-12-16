@@ -1468,14 +1468,175 @@
     },
     day16: {
       part1: data => {
-        const input = data.trim().split("\n").map(m => m.split(''));
-        const l = input.length;
-        console.log("input length: " + l);
+        const input = data.trim().split("\n\n");
+        const il = input.length;
+        console.log("input length: " + il);
         
-        return null;
+        let valid = [];
+        
+        const rules = input[0].split("\n").map(m => {
+          const pair = m.split(": ");
+          const rules = pair[1].split(" or ").map(r => r.split('-').map(Number));
+          const rule = {
+            name: pair[0],
+            lolo: rules[0][0],
+            lohi: rules[0][1],
+            hilo: rules[1][0],
+            hihi: rules[1][1]
+          };
+          for (let i = rule.lolo; i <= rule.lohi; i++) {
+            valid.push(i);
+          }
+          for (let j = rule.hilo; j <= rule.hihi; j++) {
+            valid.push(j);
+          }
+          
+          return rule;
+        });
+        const rl = rules.length;
+        console.log("rules length: " + rl);
+        
+        const validSet = [...new Set(valid)];
+        
+        const ticket = input[1].split("\n")[1].split(',').map(Number);
+        const tl = ticket.length;
+        console.log("ticket length: " + tl);
+        
+        const nearby = input[2].split("\n").slice(1).map(n => n.split(',').map(Number));
+        const nl = nearby.length;
+        console.log("nearby length: " + nl);
+        
+        const sum = nearby.reduce((a, v) => {
+          return a + v.reduce((aa, vv) => aa + (validSet.includes(vv) ? 0 : vv), 0);
+        }, 0);
+        
+        // not 2353588
+        return sum;
       },
       part2: data => {
+                const input = data.trim().split("\n\n");
+        const il = input.length;
+        console.log("input length: " + il);
         
+        let valid = [];
+        
+        let rules = input[0].split("\n").map(m => {
+          const pair = m.split(": ");
+          const rules = pair[1].split(" or ").map(r => r.split('-').map(Number));
+          const rule = {
+            name: pair[0],
+            isDeparture: pair[0].startsWith("departure"),
+            lolo: rules[0][0],
+            lohi: rules[0][1],
+            hilo: rules[1][0],
+            hihi: rules[1][1],
+            validSections: []
+          };
+          for (let i = rule.lolo; i <= rule.lohi; i++) {
+            valid.push(i);
+          }
+          for (let j = rule.hilo; j <= rule.hihi; j++) {
+            valid.push(j);
+          }
+          
+          return rule;
+        });
+        const rl = rules.length;
+        console.log("rules length: " + rl);
+        
+        const validSet = [...new Set(valid)];
+        
+        const ticket = input[1].split("\n")[1].split(',').map(Number);
+        const tl = ticket.length;
+        console.log("ticket length: " + tl);
+        
+        const nearby = input[2].split("\n").slice(1).map(n => n.split(',').map(Number));
+        const nl = nearby.length;
+        console.log("nearby length: " + nl);
+        
+        let validNearby = [];
+        for (let i = 0; i < nl; i++) {
+          const near = nearby[i];
+          if (near.every(n => validSet.includes(n))) {
+            validNearby.push(near);
+          }
+        }
+        const vnl = validNearby.length;
+        console.log("valid nearby length: " + vnl);
+        
+        // I misunderstood
+        /*
+        //let validRanges = {};
+        for (let i = 0; i < tl; i++) {
+          const val = ticket[i];
+          for (let j = 0; j < rl; j++) {
+            const rule = rules[j];
+            if ((rule.lolo <= val && val <= rule.lohi) || (rule.hilo <= val && val <= rule.hihi)) {
+              rules[j].validSections.push(i);
+            }
+          }
+        }
+        console.log(rules);
+        */
+        
+        // pivot
+        let columns = validNearby.reduce((a, v) => {
+          for (let i = 0; i < tl; i++) {
+            if (a[i] && a[i].length) {
+              a[i].push(v[i]);
+            } else {
+              a[i] = [];
+              a[i].push(v[i]);
+            }
+          }
+          return a;
+        }, new Array(tl));
+        const cl = columns.length;
+        console.log(columns);
+        
+        const isValid = (val, ll, lh, hl, hh) => (ll <= val && val <= lh) || (hl<= val && val <= hh);
+        
+        for (let i = 0; i < rl; i++) {
+          const rule = rules[i];
+          for (let j = 0; j < cl; j++) {
+            const vals = columns[j];
+            if (vals.every(v => isValid(v, rule.lolo, rule.lohi, rule.hilo, rule.hihi))) {
+              rules[i].validSections.push(j);
+            }
+          }
+        }
+        //console.log(rules);
+        
+        // oh no
+        
+        const removeSingles = () => {
+          const singles = rules.filter(r => r.validSections.length === 1).map(r => r.validSections[0]);
+          for (let i = 0; i < rl; i++) {
+            const rule = rules[i];
+            if (rule.validSections.length > 1) {
+              rules[i].validSections = rules[i].validSections.filter(v => !singles.includes(v));
+            }
+          }
+        };
+        
+        let safety = 1000;
+        while (rules.some(r => r.validSections.length > 1) && safety--) {
+          removeSingles()
+        }
+        
+        if (safety <= 0) {
+          console.warn("SAFETY hit.");
+        }
+        console.log(rules);
+        
+        const departures = rules.filter(r => r.isDeparture);
+        const dl = departures.length;
+        console.log("departures length: " + dl);
+        
+        const result = departures.reduce((a, d) => a * ticket[d.validSections[0]] , 1);
+        
+        console.log(result);
+        return result;
       }
     },
     day17: {
