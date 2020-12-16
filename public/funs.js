@@ -1195,8 +1195,8 @@
         // this still takes too long
         //const first = 100035869999992;
         //1658065791492211
-        const first = 100000000000000;
-        //const first = 0;
+        //const first = 100000000000000;
+        const first = 0;
         let safety = 100000000000000;
         /* way too slow
         while (safety--) {
@@ -1252,6 +1252,7 @@
           console.warn("SAFETY hit.");
         }
         
+        // 99468381574216660 is too high
         return timestamp;
       }
     },
@@ -1318,11 +1319,11 @@
         });
         const l = input.length;
         console.log("input length: " + l);
-        const maskBits = (mask, bits, mem, val) => {
+        const maskBits = (maskconst, bits, mem, val) => {
           let newbits = [];
           //console.log(mask, bits, parseInt(bits), 2);
-          for (let i = mask.length; i--;) {
-            newbits[i] = (mask[i] === '0') ? bits[i] : mask[i];
+          for (let i = maskconst.length; i--;) {
+            newbits[i] = (maskconst[i] === '0') ? bits[i] : maskconst[i];
           }
           let strbits = newbits.join("");
           let vals = [];
@@ -1355,16 +1356,19 @@
           if (cmd.isMask) {
             mask = cmd.mask;
           } else {
-            mem = maskBits(mask, cmd.bval, mem, cmd.value);
+            const maskconst = mask;
+            mem = maskBits(maskconst, cmd.bval, mem, cmd.value);
           }
           
           return mem;
-        }, []);
+        }, {});
         //console.log(result);
         
-        const sum = result.filter(v => v).reduce((a, v) => a + v, 0);
-        
+        //const sum = result.reduce((a, v) => a + v, 0);
+        const sum = Object.keys(result).reduce((a, k) => a + result[k], 0);
         console.log(sum);
+        
+        // 90096313662 is too low
         return sum;
       }
     },
