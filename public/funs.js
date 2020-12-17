@@ -1640,40 +1640,76 @@
       }
     },
     day17: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day18: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day19: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day20: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day21: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day22: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day23: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day24: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day25: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     }
   };
 
