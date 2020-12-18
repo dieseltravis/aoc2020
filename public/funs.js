@@ -1467,44 +1467,496 @@
       }
     },
     day16: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        const input = data.trim().split("\n\n");
+        const il = input.length;
+        console.log("input length: " + il);
+        
+        let valid = [];
+        
+        const rules = input[0].split("\n").map(m => {
+          const pair = m.split(": ");
+          const rules = pair[1].split(" or ").map(r => r.split('-').map(Number));
+          const rule = {
+            name: pair[0],
+            lolo: rules[0][0],
+            lohi: rules[0][1],
+            hilo: rules[1][0],
+            hihi: rules[1][1]
+          };
+          for (let i = rule.lolo; i <= rule.lohi; i++) {
+            valid.push(i);
+          }
+          for (let j = rule.hilo; j <= rule.hihi; j++) {
+            valid.push(j);
+          }
+          
+          return rule;
+        });
+        const rl = rules.length;
+        console.log("rules length: " + rl);
+        
+        const validSet = [...new Set(valid)];
+        
+        const ticket = input[1].split("\n")[1].split(',').map(Number);
+        const tl = ticket.length;
+        console.log("ticket length: " + tl);
+        
+        const nearby = input[2].split("\n").slice(1).map(n => n.split(',').map(Number));
+        const nl = nearby.length;
+        console.log("nearby length: " + nl);
+        
+        const sum = nearby.reduce((a, v) => {
+          return a + v.reduce((aa, vv) => aa + (validSet.includes(vv) ? 0 : vv), 0);
+        }, 0);
+        
+        // not 2353588
+        return sum;
+      },
+      part2: data => {
+        const input = data.trim().split("\n\n");
+        const il = input.length;
+        console.log("input length: " + il);
+        
+        let valid = [];
+        
+        let rules = input[0].split("\n").map(m => {
+          const pair = m.split(": ");
+          const rules = pair[1].split(" or ").map(r => r.split('-').map(Number));
+          const rule = {
+            name: pair[0],
+            isDeparture: pair[0].startsWith("departure"),
+            lolo: rules[0][0],
+            lohi: rules[0][1],
+            hilo: rules[1][0],
+            hihi: rules[1][1],
+            validSections: []
+          };
+          for (let i = rule.lolo; i <= rule.lohi; i++) {
+            valid.push(i);
+          }
+          for (let j = rule.hilo; j <= rule.hihi; j++) {
+            valid.push(j);
+          }
+          
+          return rule;
+        });
+        const rl = rules.length;
+        console.log("rules length: " + rl);
+        
+        const validSet = [...new Set(valid)];
+        
+        const ticket = input[1].split("\n")[1].split(',').map(Number);
+        const tl = ticket.length;
+        console.log("ticket length: " + tl);
+        
+        const nearby = input[2].split("\n").slice(1).map(n => n.split(',').map(Number));
+        const nl = nearby.length;
+        console.log("nearby length: " + nl);
+        
+        let validNearby = [];
+        for (let i = 0; i < nl; i++) {
+          const near = nearby[i];
+          if (near.every(n => validSet.includes(n))) {
+            validNearby.push(near);
+          }
+        }
+        const vnl = validNearby.length;
+        console.log("valid nearby length: " + vnl);
+        
+        // I misunderstood
+        /*
+        //let validRanges = {};
+        for (let i = 0; i < tl; i++) {
+          const val = ticket[i];
+          for (let j = 0; j < rl; j++) {
+            const rule = rules[j];
+            if ((rule.lolo <= val && val <= rule.lohi) || (rule.hilo <= val && val <= rule.hihi)) {
+              rules[j].validSections.push(i);
+            }
+          }
+        }
+        console.log(rules);
+        */
+        
+        // pivot
+        let columns = validNearby.reduce((a, v) => {
+          for (let i = 0; i < tl; i++) {
+            if (a[i] && a[i].length) {
+              a[i].push(v[i]);
+            } else {
+              a[i] = [];
+              a[i].push(v[i]);
+            }
+          }
+          return a;
+        }, new Array(tl));
+        const cl = columns.length;
+        console.log(columns);
+        
+        const isValid = (val, ll, lh, hl, hh) => (ll <= val && val <= lh) || (hl<= val && val <= hh);
+        
+        for (let i = 0; i < rl; i++) {
+          const rule = rules[i];
+          for (let j = 0; j < cl; j++) {
+            const vals = columns[j];
+            if (vals.every(v => isValid(v, rule.lolo, rule.lohi, rule.hilo, rule.hihi))) {
+              rules[i].validSections.push(j);
+            }
+          }
+        }
+        //console.log(rules);
+        
+        // oh no
+        
+        const removeSingles = () => {
+          const singles = rules.filter(r => r.validSections.length === 1).map(r => r.validSections[0]);
+          for (let i = 0; i < rl; i++) {
+            const rule = rules[i];
+            if (rule.validSections.length > 1) {
+              rules[i].validSections = rules[i].validSections.filter(v => !singles.includes(v));
+            }
+          }
+        };
+        
+        let safety = 1000;
+        while (rules.some(r => r.validSections.length > 1) && safety--) {
+          removeSingles()
+        }
+        
+        if (safety <= 0) {
+          console.warn("SAFETY hit.");
+        }
+        console.log(rules);
+        
+        const departures = rules.filter(r => r.isDeparture);
+        const dl = departures.length;
+        console.log("departures length: " + dl);
+        
+        const result = departures.reduce((a, d) => a * ticket[d.validSections[0]] , 1);
+        
+        console.log(result);
+        return result;
+      }
     },
     day17: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        const A = "#";
+        const I = ".";
+        const cycles = 6;
+        const input = data.trim().split("\n").map(m => m.split(""));
+        const il = input.length;
+        console.log("input length: " + il);
+        
+        let lastz = null;
+        let lasty = null;
+
+        const display = (a, s) => {
+          if (s.z !== lastz) {
+            a += "\n\nz=" + s.z + "";
+            lastz = s.z;
+          }
+          if (s.y !== lasty) {
+            a += "\n";
+            lasty = s.y;
+          }
+          a += (s.active ? A : I);
+          return a;
+        };
+        
+        let state = [];
+        for (let i = 0; i < il; i++) {
+          for (let j = 0, jl = input[i].length; j < jl; j++){
+            state.push({
+              active: input[i][j] === A,
+              x: j,
+              y: i,
+              z: 0
+            });
+          }
+        }
+        let sl = state.length;
+        console.log("begin state: ", sl, state);
+        console.log(state.reduce(display, ""));
+
+        
+        for (let c = 0; c < cycles; c++) {
+          // expand with inactives
+          const xs = state.map(s => s.x);
+          const minx = Math.min(...xs);
+          const maxx = Math.max(...xs);
+          const ys = state.map(s => s.y);
+          const miny = Math.min(...ys);
+          const maxy = Math.max(...ys);
+          const zs = state.map(s => s.z);
+          const minz = Math.min(...zs);
+          const maxz = Math.max(...zs);
+          for (let x = minx - 1; x < maxx + 2; x++) {
+            for (let y = miny - 1; y < maxy + 2; y++) {
+              for (let z = minz - 1; z < maxz + 2; z++) {
+                if (!state.some(s => s.x === x && s.y === y && s.z === z)) {
+                  state.push({
+                    active: false,
+                    x: x,
+                    y: y,
+                    z: z
+                  });
+                }
+              }
+            }
+          }
+          state = state.sort((a, b) => a.z - b.z || a.y - b.y || a.x - b.x);
+          sl = state.length;
+          
+          let newState = JSON.parse(JSON.stringify(state));
+          
+          for (let i = 0; i < sl; i++) {
+            const x = state[i].x;
+            const y = state[i].y;
+            const z = state[i].z;
+            const lox = x - 1;
+            const hix = x + 1;
+            const loy = y - 1;
+            const hiy = y + 1;
+            const loz = z - 1;
+            const hiz = z + 1;
+
+            let isActive = state[i].active;
+            let activeCount = 0;
+            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+                                       (lox === s.x || s.x === x || s.x === hix) &&
+                                       (loy === s.y || s.y === y || s.y === hiy) &&
+                                       (loz === s.z || s.z === z || s.z === hiz) &&
+                                       s.active
+                                      ).length;
+            
+            //console.log(isActive, activeCount);
+            
+            if (isActive) {
+              if (activeCount === 2 || activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            } else {
+              if (activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            }
+          }
+          //console.log("newState: ", newState);
+          state = newState;
+          sl = state.length;
+          //break;
+        }
+        
+        state = state.sort((a, b) => a.z - b.z || a.y - b.y || a.x - b.x);
+        console.log("end state: ", sl, state);
+        console.log(state.reduce(display, ""));
+
+        const result = state.filter(s => s.active).length;
+        console.log(result);
+        return result;
+      },
+      part2: data => {
+        const A = "#";
+        const I = ".";
+        const cycles = 6;
+        const input = data.trim().split("\n").map(m => m.split(""));
+        const il = input.length;
+        console.log("input length: " + il);
+        
+        let lastw = null;
+        let lastz = null;
+        let lasty = null;
+
+        const display = (a, s) => {
+          if (s.z !== lastz || s.w !== lastw) {
+            a += "\n\nz=" + s.z + ", w=" + s.w + "";
+            lastz = s.z;
+            lastw = s.w;
+          }
+          if (s.y !== lasty) {
+            a += "\n";
+            lasty = s.y;
+          }
+          a += (s.active ? A : I);
+          return a;
+        };
+        
+        let state = [];
+        for (let i = 0; i < il; i++) {
+          for (let j = 0, jl = input[i].length; j < jl; j++){
+            state.push({
+              active: input[i][j] === A,
+              x: j,
+              y: i,
+              z: 0,
+              w: 0
+            });
+          }
+        }
+        let sl = state.length;
+        console.log("begin state: ", sl, state);
+        console.log(state.reduce(display, ""));
+
+        
+        for (let c = 0; c < cycles; c++) {
+          // expand with inactives
+          const xs = state.map(s => s.x);
+          const minx = Math.min(...xs);
+          const maxx = Math.max(...xs);
+          const ys = state.map(s => s.y);
+          const miny = Math.min(...ys);
+          const maxy = Math.max(...ys);
+          const zs = state.map(s => s.z);
+          const minz = Math.min(...zs);
+          const maxz = Math.max(...zs);
+          const ws = state.map(s => s.w);
+          const minw = Math.min(...ws);
+          const maxw = Math.max(...ws);
+          for (let x = minx - 1; x < maxx + 2; x++) {
+            for (let y = miny - 1; y < maxy + 2; y++) {
+              for (let z = minz - 1; z < maxz + 2; z++) {
+                for (let w = minw - 1; w < maxw + 2; w++) {
+                  if (!state.some(s => s.x === x && s.y === y && s.z === z && s.w === w)) {
+                    state.push({
+                      active: false,
+                      x: x,
+                      y: y,
+                      z: z,
+                      w: w
+                    });
+                  }
+                }
+              }
+            }
+          }
+          state = state.sort((a, b) => a.w - b.w || a.z - b.z || a.y - b.y || a.x - b.x);
+          sl = state.length;
+          
+          let newState = JSON.parse(JSON.stringify(state));
+          
+          for (let i = 0; i < sl; i++) {
+            const x = state[i].x;
+            const y = state[i].y;
+            const z = state[i].z;
+            const w = state[i].w;
+            const lox = x - 1;
+            const hix = x + 1;
+            const loy = y - 1;
+            const hiy = y + 1;
+            const loz = z - 1;
+            const hiz = z + 1;
+            const low = w - 1;
+            const hiw = w + 1;
+
+            let isActive = state[i].active;
+            let activeCount = 0;
+            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+                                       (lox === s.x || s.x === x || s.x === hix) &&
+                                       (loy === s.y || s.y === y || s.y === hiy) &&
+                                       (loz === s.z || s.z === z || s.z === hiz) &&
+                                       (low === s.w || s.w === w || s.w === hiw) &&
+                                       s.active
+                                      ).length;
+            
+            //console.log(isActive, activeCount);
+            
+            if (isActive) {
+              if (activeCount === 2 || activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            } else {
+              if (activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            }
+          }
+          //console.log("newState: ", newState);
+          state = newState;
+          sl = state.length;
+          //break;
+        }
+        
+        state = state.sort((a, b) => a.w - b.w || a.z - b.z || a.y - b.y || a.x - b.x);
+        //console.log("end state: ", sl, state);
+        //console.log(state.reduce(display, ""));
+
+        const result = state.filter(s => s.active).length;
+        console.log(result);
+        return result;
+      }
     },
     day18: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day19: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day20: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day21: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day22: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day23: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day24: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     },
     day25: {
-      part1: data => {},
-      part2: data => {}
+      part1: data => {
+        
+      },
+      part2: data => {
+        
+      }
     }
   };
 
