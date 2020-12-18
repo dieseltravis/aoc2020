@@ -1761,7 +1761,137 @@
         return result;
       },
       part2: data => {
+        const A = "#";
+        const I = ".";
+        const cycles = 6;
+        const input = data.trim().split("\n").map(m => m.split(""));
+        const il = input.length;
+        console.log("input length: " + il);
         
+        let lastw = null;
+        let lastz = null;
+        let lasty = null;
+
+        const display = (a, s) => {
+          if (s.z !== lastz || s.w !== lastw) {
+            a += "\n\nz=" + s.z + ", w=" + s.w + "";
+            lastz = s.z;
+            lastw = s.w;
+          }
+          if (s.y !== lasty) {
+            a += "\n";
+            lasty = s.y;
+          }
+          a += (s.active ? A : I);
+          return a;
+        };
+        
+        let state = [];
+        for (let i = 0; i < il; i++) {
+          for (let j = 0, jl = input[i].length; j < jl; j++){
+            state.push({
+              active: input[i][j] === A,
+              x: j,
+              y: i,
+              z: 0,
+              w: 0
+            });
+          }
+        }
+        let sl = state.length;
+        console.log("begin state: ", sl, state);
+        console.log(state.reduce(display, ""));
+
+        
+        for (let c = 0; c < cycles; c++) {
+          // expand with inactives
+          const xs = state.map(s => s.x);
+          const minx = Math.min(...xs);
+          const maxx = Math.max(...xs);
+          const ys = state.map(s => s.y);
+          const miny = Math.min(...ys);
+          const maxy = Math.max(...ys);
+          const zs = state.map(s => s.z);
+          const minz = Math.min(...zs);
+          const maxz = Math.max(...zs);
+          const ws = state.map(s => s.w);
+          const minw = Math.min(...ws);
+          const maxw = Math.max(...ws);
+          for (let x = minx - 1; x < maxx + 2; x++) {
+            for (let y = miny - 1; y < maxy + 2; y++) {
+              for (let z = minz - 1; z < maxz + 2; z++) {
+                for (let w = minw - 1; w < maxw + 2; w++) {
+                  if (!state.some(s => s.x === x && s.y === y && s.z === z && s.w === w)) {
+                    state.push({
+                      active: false,
+                      x: x,
+                      y: y,
+                      z: z,
+                      w: w
+                    });
+                  }
+                }
+              }
+            }
+          }
+          state = state.sort((a, b) => a.w - b.w || a.z - b.z || a.y - b.y || a.x - b.x);
+          sl = state.length;
+          
+          let newState = JSON.parse(JSON.stringify(state));
+          
+          for (let i = 0; i < sl; i++) {
+            const x = state[i].x;
+            const y = state[i].y;
+            const z = state[i].z;
+            const w = state[i].w;
+            const lox = x - 1;
+            const hix = x + 1;
+            const loy = y - 1;
+            const hiy = y + 1;
+            const loz = z - 1;
+            const hiz = z + 1;
+            const low = w - 1;
+            const hiw = w + 1;
+
+            let isActive = state[i].active;
+            let activeCount = 0;
+            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+                                       (lox === s.x || s.x === x || s.x === hix) &&
+                                       (loy === s.y || s.y === y || s.y === hiy) &&
+                                       (loz === s.z || s.z === z || s.z === hiz) &&
+                                       (low === s.w || s.w === w || s.w === hiw) &&
+                                       s.active
+                                      ).length;
+            
+            //console.log(isActive, activeCount);
+            
+            if (isActive) {
+              if (activeCount === 2 || activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            } else {
+              if (activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            }
+          }
+          //console.log("newState: ", newState);
+          state = newState;
+          sl = state.length;
+          //break;
+        }
+        
+        state = state.sort((a, b) => a.w - b.w || a.z - b.z || a.y - b.y || a.x - b.x);
+        //console.log("end state: ", sl, state);
+        //console.log(state.reduce(display, ""));
+
+        const result = state.filter(s => s.active).length;
+        console.log(result);
+        return result;
       }
     },
     day18: {
