@@ -1544,21 +1544,6 @@
         const vnl = validNearby.length;
         console.log("valid nearby length: " + vnl);
         
-        // I misunderstood
-        /*
-        //let validRanges = {};
-        for (let i = 0; i < tl; i++) {
-          const val = ticket[i];
-          for (let j = 0; j < rl; j++) {
-            const rule = rules[j];
-            if ((rule.lolo <= val && val <= rule.lohi) || (rule.hilo <= val && val <= rule.hihi)) {
-              rules[j].validSections.push(i);
-            }
-          }
-        }
-        console.log(rules);
-        */
-        
         // pivot
         let columns = validNearby.reduce((a, v) => {
           for (let i = 0; i < tl; i++) {
@@ -1953,7 +1938,69 @@
         return sum;
       },
       part2: data => {
+        const input = data.trim().split("\n").map(m => m.replace(/\s/g,""));
+        const il = input.length;
+        console.log("input length: " + il);
+        const findClosed = (str, pos) => {
+          let depth = 1;
+          const sl = str.length;
+          for (let i = pos + 1; i < sl; i++) {
+            switch (str[i]) {
+              case '(':
+                depth++;
+                break;
+              case ')':
+                if (--depth === 0) {
+                  return i;
+                }
+                break;
+            }
+          }
+        };
+        const calc = (expr) => {
+          let safety = 10000;
+          while (safety-- && expr.includes('+')) {
+            // evaluate and replace number pairs around + first
+            expr = expr.replace(/(\d+)\+(\d+)/, (_, a, b) => {
+              //console.log(a, "+", b)
+              return (+a) + (+b);
+            });
+          }
+          if (safety <= 0) {
+            console.warn("SAFETY hit.");
+          }
+          // only * left
+          return expr.split('*').reduce((a,v) => a * +v, 1);
+        };
+        const pemdas = (expr) => {
+          //console.log("expr:", expr);
+          let value = null;
+          let safety = 10000;
+          while (safety-- && expr.includes('(')) {
+            const open = expr.indexOf('(');
+            if (open > -1) {
+              // extract paren value
+              const close = findClosed(expr, open);
+              const subexpr = expr.substring(open + 1, close);
+              //console.log("subexpr:", subexpr);
+              const subvalue = pemdas(subexpr);
+              //console.log("subvalue:", subvalue);
+              expr = expr.substring(0, open) + subvalue + expr.substring(close + 1);
+              //console.log("new expr:", expr);
+            }
+          }
+          // no parens, calculate
+          value = calc(expr);
+                    
+          return value;
+        }; 
         
+        let sum = 0;
+        for (let i = 0; i < il; i++) {
+          sum += pemdas(input[i]);
+        }
+        console.log(sum);
+        return sum;
       }
     },
     day19: {
