@@ -1198,32 +1198,11 @@
         //const first = 100000000000000;
         const first = 0;
         let safety = 100000000000000;
-        /* way too slow
-        while (safety--) {
-          // always start at next first bus
-          t += buses2[0].bus;
-          let timestamp = t;
-          for (let i = 0, l = buses2.length; i < l; i++) {
-            let close = 0;
-            const bus = buses2[i];
-            close = (timestamp + bus.i) % bus.bus;
-            if (close === 0) {
-              if (i === l - 1) {
-                console.log(t)
-                return t;
-              }
-              //timestamp;
-            } else {
-              //t = timestamp;
-              i = l + 1;
-            }
-          }
-        }
-        */
-        const l = buses2.length;
-        const allBuses = (b) => {
-          return b.i % b.bus;
-        };
+
+        //const l = buses2.length;
+        //const allBuses = (b) => {
+        //  return b.i % b.bus;
+        //};
         //const firstVal = buses2[0].bus;
         const bigVal = buses2.reduce((a, b) => Math.max(a, b.bus), 0);
         const bigBus = buses2.filter(b => b.bus === bigVal)[0];
@@ -1241,7 +1220,8 @@
           //const timestamp = t * firstVal;
           // count by the biggest value
           timestamp = (t * bigVal) - bigBus.i;
-          if (buses2.every((b) => ((timestamp + b.i) % b.bus) === 0)) {
+          const t2 = timestamp;
+          if (buses2.every((b) => ((t2 + b.i) % b.bus) === 0)) {
             return timestamp;
           }
           t++;
@@ -1621,7 +1601,7 @@
         
         let safety = 1000;
         while (rules.some(r => r.validSections.length > 1) && safety--) {
-          removeSingles()
+          removeSingles();
         }
         
         if (safety <= 0) {
@@ -1694,7 +1674,8 @@
           for (let x = minx - 1; x < maxx + 2; x++) {
             for (let y = miny - 1; y < maxy + 2; y++) {
               for (let z = minz - 1; z < maxz + 2; z++) {
-                if (!state.some(s => s.x === x && s.y === y && s.z === z)) {
+                const x2 = x, y2 = y, z2 = z;
+                if (!state.some(s => s.x === x2 && s.y === y2 && s.z === z2)) {
                   state.push({
                     active: false,
                     x: x,
@@ -1723,7 +1704,8 @@
 
             let isActive = state[i].active;
             let activeCount = 0;
-            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+            const i2 = i;
+            activeCount = state.filter((s, ii) => i2 !== ii && // skip current item
                                        (lox === s.x || s.x === x || s.x === hix) &&
                                        (loy === s.y || s.y === y || s.y === hiy) &&
                                        (loz === s.z || s.z === z || s.z === hiz) &&
@@ -1821,7 +1803,8 @@
             for (let y = miny - 1; y < maxy + 2; y++) {
               for (let z = minz - 1; z < maxz + 2; z++) {
                 for (let w = minw - 1; w < maxw + 2; w++) {
-                  if (!state.some(s => s.x === x && s.y === y && s.z === z && s.w === w)) {
+                  const x2 = x, y2 = y, z2 = z, w2 = w;
+                  if (!state.some(s => s.x === x2 && s.y === y2 && s.z === z2 && s.w === w2)) {
                     state.push({
                       active: false,
                       x: x,
@@ -1855,7 +1838,8 @@
 
             let isActive = state[i].active;
             let activeCount = 0;
-            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+            const i2 = i;
+            activeCount = state.filter((s, ii) => i2 !== ii && // skip current item
                                        (lox === s.x || s.x === x || s.x === hix) &&
                                        (loy === s.y || s.y === y || s.y === hiy) &&
                                        (loz === s.z || s.z === z || s.z === hiz) &&
@@ -1896,7 +1880,9 @@
     },
     day18: {
       part1: data => {
-        
+        const input = data.trim().split("\n").map(m => m.split(""));
+        const il = input.length;
+        console.log("input length: " + il);
       },
       part2: data => {
         
