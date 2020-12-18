@@ -1514,7 +1514,7 @@
         return sum;
       },
       part2: data => {
-                const input = data.trim().split("\n\n");
+        const input = data.trim().split("\n\n");
         const il = input.length;
         console.log("input length: " + il);
         
@@ -1641,7 +1641,173 @@
     },
     day17: {
       part1: data => {
+        const A = "#";
+        const I = ".";
+        const cycles = 6;
+        const input = data.trim().split("\n").map(m => m.split(""));
+        const il = input.length;
+        console.log("input length: " + il);
         
+        let lastz = null;
+        let lasty = null;
+
+        const display = (a, s) => {
+          if (s.z !== lastz) {
+            a += "\n\nz=" + s.z + "";
+            lastz = s.z;
+          }
+          if (s.y !== lasty) {
+            a += "\n";
+            lasty = s.y;
+          }
+          a += (s.active ? A : I);
+          return a;
+        };
+        
+        let state = [];
+        for (let i = 0; i < il; i++) {
+          for (let j = 0, jl = input[i].length; j < jl; j++){
+            state.push({
+              active: input[i][j] === A,
+              x: j,
+              y: i,
+              z: 0
+            });
+          }
+        }
+        let sl = state.length;
+        console.log("begin state: ", sl, state);
+        console.log(state.reduce(display, ""));
+
+        
+        for (let c = 0; c < cycles; c++) {
+          const xs = state.map(s => s.x);
+          const minx = Math.min(...xs);
+          const maxx = Math.max(...xs);
+          const ys = state.map(s => s.y);
+          const miny = Math.min(...ys);
+          const maxy = Math.max(...ys);
+          const zs = state.map(s => s.z);
+          const minz = Math.min(...zs);
+          const maxz = Math.max(...zs);
+          for (let i = 0; i < sl; i++) {
+            const s = state[i];
+            if (s.z === minz) {
+              state.push({
+                active: false,
+                x: s.x,
+                y: s.y,
+                z: s.z - 1
+              });
+            }
+            if (s.z === maxz) {
+              state.push({
+                active: false,
+                x: s.x,
+                y: s.y,
+                z: s.z + 1
+              });
+            }
+          }
+          state = state.sort((a, b) => a.z - b.z || a.y - b.y || a.x - b.x);
+          sl = state.length;
+          
+          let newState = JSON.parse(JSON.stringify(state));
+          
+          for (let i = 0; i < sl; i++) {
+            const x = state[i].x;
+            const y = state[i].y;
+            const z = state[i].z;
+            
+            //todo use min/max to wrap?
+            /*
+            const lox = (x - 1 < minx) ? maxx : x - 1;
+            const hix = (x + 1 > maxx) ? minx : x + 1;
+            const loy = (y - 1 < miny) ? maxy : y - 1;
+            const hiy = (y + 1 > maxy) ? miny : y + 1;
+            const loz = (z - 1 < minz) ? maxz : z - 1;
+            const hiz = (z + 1 > maxz) ? minz : z + 1;
+            */
+            const lox = x - 1;
+            const hix = x + 1;
+            const loy = y - 1;
+            const hiy = y + 1;
+            const loz = z - 1;
+            const hiz = z + 1;
+
+            let isActive = state[i].active;
+            let activeCount = 0;
+            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+                                       // check in range NOTE: does it wrap???
+                                       (lox === s.x || s.x === x || s.x === hix) &&
+                                       (loy === s.y || s.y === y || s.y === hiy) &&
+                                       (loz === s.z || s.z === z || s.z === hiz) &&
+                                       s.active
+                                      ).length;
+            /*
+            let inactiveCount = 0;
+           
+            for (let xx = x - 1; xx < x + 2; xx++) {
+              for (let yy = y - 1; yy < y + 2; yy++) {
+                for (let zz = z - 1; zz < z + 2; zz++) {
+                  //console.log(xx, yy, zz);
+                  // skip if same element
+                  if (!(x === xx && y === yy && z === zz)) {
+                    let found = state.filter(s => s.x === xx && s.y === yy && s.z === zz);
+                    if (!found || found.length === 0) {
+                      if (!newState.some(s => s.x === xx && s.y === yy && s.z === zz)) {
+                        // add empty neighbor
+                        newState.push({
+                          active: false,
+                          x: xx,
+                          y: yy,
+                          z: zz
+                        });
+                      }
+                      inactiveCount++;
+                    } else {
+                      if (found[0].active) {
+                        activeCount++;
+                      } else {
+                        inactiveCount++;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            */
+            
+            console.log(isActive, activeCount);
+            
+            if (isActive) {
+              if (activeCount === 2 || activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            } else {
+              if (activeCount === 3) {
+                newState[i].active = true;
+              } else {
+                newState[i].active = false;                
+              }
+            }
+          }
+          //console.log("newState: ", newState);
+          state = newState;
+          sl = state.length;
+          break;
+        }
+        
+        state = state.sort((a, b) => a.z - b.z || a.y - b.y || a.x - b.x);
+        console.log("end state: ", sl, state);
+        console.log(state.reduce(display, ""));
+
+        //const result = state.reduce((a, s) => a + (s.active ? 1 : 0), 0);
+        const result = state.filter(s => s.active).length;
+        console.log(result);
+        return result;
       },
       part2: data => {
         
