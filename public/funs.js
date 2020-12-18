@@ -1198,32 +1198,11 @@
         //const first = 100000000000000;
         const first = 0;
         let safety = 100000000000000;
-        /* way too slow
-        while (safety--) {
-          // always start at next first bus
-          t += buses2[0].bus;
-          let timestamp = t;
-          for (let i = 0, l = buses2.length; i < l; i++) {
-            let close = 0;
-            const bus = buses2[i];
-            close = (timestamp + bus.i) % bus.bus;
-            if (close === 0) {
-              if (i === l - 1) {
-                console.log(t)
-                return t;
-              }
-              //timestamp;
-            } else {
-              //t = timestamp;
-              i = l + 1;
-            }
-          }
-        }
-        */
-        const l = buses2.length;
-        const allBuses = (b) => {
-          return b.i % b.bus;
-        };
+
+        //const l = buses2.length;
+        //const allBuses = (b) => {
+        //  return b.i % b.bus;
+        //};
         //const firstVal = buses2[0].bus;
         const bigVal = buses2.reduce((a, b) => Math.max(a, b.bus), 0);
         const bigBus = buses2.filter(b => b.bus === bigVal)[0];
@@ -1241,7 +1220,8 @@
           //const timestamp = t * firstVal;
           // count by the biggest value
           timestamp = (t * bigVal) - bigBus.i;
-          if (buses2.every((b) => ((timestamp + b.i) % b.bus) === 0)) {
+          const t2 = timestamp;
+          if (buses2.every((b) => ((t2 + b.i) % b.bus) === 0)) {
             return timestamp;
           }
           t++;
@@ -1621,7 +1601,7 @@
         
         let safety = 1000;
         while (rules.some(r => r.validSections.length > 1) && safety--) {
-          removeSingles()
+          removeSingles();
         }
         
         if (safety <= 0) {
@@ -1694,7 +1674,8 @@
           for (let x = minx - 1; x < maxx + 2; x++) {
             for (let y = miny - 1; y < maxy + 2; y++) {
               for (let z = minz - 1; z < maxz + 2; z++) {
-                if (!state.some(s => s.x === x && s.y === y && s.z === z)) {
+                const x2 = x, y2 = y, z2 = z;
+                if (!state.some(s => s.x === x2 && s.y === y2 && s.z === z2)) {
                   state.push({
                     active: false,
                     x: x,
@@ -1723,7 +1704,8 @@
 
             let isActive = state[i].active;
             let activeCount = 0;
-            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+            const i2 = i;
+            activeCount = state.filter((s, ii) => i2 !== ii && // skip current item
                                        (lox === s.x || s.x === x || s.x === hix) &&
                                        (loy === s.y || s.y === y || s.y === hiy) &&
                                        (loz === s.z || s.z === z || s.z === hiz) &&
@@ -1821,7 +1803,8 @@
             for (let y = miny - 1; y < maxy + 2; y++) {
               for (let z = minz - 1; z < maxz + 2; z++) {
                 for (let w = minw - 1; w < maxw + 2; w++) {
-                  if (!state.some(s => s.x === x && s.y === y && s.z === z && s.w === w)) {
+                  const x2 = x, y2 = y, z2 = z, w2 = w;
+                  if (!state.some(s => s.x === x2 && s.y === y2 && s.z === z2 && s.w === w2)) {
                     state.push({
                       active: false,
                       x: x,
@@ -1855,7 +1838,8 @@
 
             let isActive = state[i].active;
             let activeCount = 0;
-            activeCount = state.filter((s, ii) => i !== ii && // skip current item
+            const i2 = i;
+            activeCount = state.filter((s, ii) => i2 !== ii && // skip current item
                                        (lox === s.x || s.x === x || s.x === hix) &&
                                        (loy === s.y || s.y === y || s.y === hiy) &&
                                        (loz === s.z || s.z === z || s.z === hiz) &&
@@ -1896,7 +1880,77 @@
     },
     day18: {
       part1: data => {
+        const input = data.trim().split("\n").map(m => m.replace(/\s/g,""));
+        const il = input.length;
+        console.log("input length: " + il);
+        const findClosed = (str, pos) => {
+          let depth = 1;
+          const sl = str.length;
+          for (let i = pos + 1; i < sl; i++) {
+            switch (str[i]) {
+              case '(':
+                depth++;
+                break;
+              case ')':
+                if (--depth === 0) {
+                  return i;
+                }
+                break;
+            }
+          }
+        };
+        const calc = (expr) => {
+          const el = expr.length;
+          let result = null;
+          for (let i = 0; i < el; i++) {
+            const c = expr[i];
+            if (i === 0) {
+              const m = expr.match(/\d+/);
+              i += m.length - 1;
+              result = +m;
+            } else if (c === '+') {
+              const m = expr.substring(i + 1).match(/\d+/);
+              i += m.length;
+              const c2 = +m;
+              result += c2;
+            } else if (c === '*') {
+              const m = expr.substring(i + 1).match(/\d+/);
+              i += m.length;
+              const c2 = +m;
+              result *= c2;
+            }
+          }
+          return result;
+        };
+        const pemdas = (expr) => {
+          //console.log("expr:", expr);
+          let value = null;
+          let safety = 10000;
+          while (safety-- && expr.includes('(')) {
+            const open = expr.indexOf('(');
+            if (open > -1) {
+              // extract paren value
+              const close = findClosed(expr, open);
+              const subexpr = expr.substring(open + 1, close);
+              //console.log("subexpr:", subexpr);
+              const subvalue = pemdas(subexpr);
+              //console.log("subvalue:", subvalue);
+              expr = expr.substring(0, open) + subvalue + expr.substring(close + 1);
+              //console.log("new expr:", expr);
+            }
+          }
+          // no parens, calculate
+          value = calc(expr);
+                    
+          return value;
+        }; 
         
+        let sum = 0;
+        for (let i = 0; i < il; i++) {
+          sum += pemdas(input[i]);
+        }
+        console.log(sum);
+        return sum;
       },
       part2: data => {
         
