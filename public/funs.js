@@ -2005,7 +2005,9 @@
     },
     day19: {
       part1: data => {
-        
+        const input = data.trim().split("\n").map(m => m.split(''));
+        const l = input.length;
+        console.log("input length: " + l);
       },
       part2: data => {
         
