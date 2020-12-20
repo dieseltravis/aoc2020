@@ -2005,9 +2005,139 @@
     },
     day19: {
       part1: data => {
-        const input = data.trim().split("\n").map(m => m.split(''));
-        const l = input.length;
-        console.log("input length: " + l);
+        const input = data.trim().split("\n\n");
+        const il = input.length;
+        console.log("input length: " + il);
+        
+        const rules = input[0].split("\n").map(m => {
+          const rule = m.split(":");
+          const index = +rule[0];
+          const right = rule[1].trim();
+          if (right.includes('"')) {
+            const char = right.replace(/\"/g, "");
+            return {
+              index: index,
+              char: char,
+              str: [ char ]
+            };
+          } else {
+            const multi = right.split("|").map(m => m.trim().split(" ").map(Number));
+            return {
+              index: index,
+              multi: multi,
+              vals: JSON.parse(JSON.stringify(multi)),
+              str: []
+            };
+          }
+        }).sort((a, b) => a.index - b.index);
+        
+        // optimize
+        let searched = [];
+        let toSearch = [];
+        const replaceVals = (a, str) => {
+          toSearch.push(a);
+          
+          let as = rules.filter(r => r.vals && r.vals.some(m => m.includes(a)));
+          console.log("as", as);
+          for (let l = as.length; l--;) {
+            let am = rules[as[l].index].vals;
+            console.log("am", am);
+            for (let ll = am.length; ll--;) {
+              let ai = -1;
+              let safety = 1000;
+              do {
+                ai = am[ll].indexOf(a);
+                console.log("ai", ai);
+                rules[as[l].index].vals[ll][ai] = str;
+              } while (am[ll].includes(a, ai + 1) && ai > -1 && safety--);
+              if (safety <= 0) {
+                console.warn("SAFETY hit!");
+              }
+            }
+          }
+          
+          let ass = rules.filter(r => !searched.includes(r.index) && r.vals && r.vals.some(m => m.every(mm => {
+            const mmm = typeof mm;
+            return mmm === "string" || mmm === "object";
+          })));
+          for (let l = ass.length; l--;) {
+            let amm = rules[ass[l].index].vals;
+            for (let ll = amm.length; ll--;) {
+              if (amm[ll].every(mm => mm => {
+                const mmm = typeof mm;
+                return mmm === "string" || mmm === "object";
+              })) {
+                console.log(as[l]);
+                // why is as[l] undefined?
+                rules[as[l].index].str[ll] = amm[ll].join("");
+              }
+            }
+            toSearch.push(ass[l].index);
+          }
+          
+          searched.push(a);
+          toSearch = [... new Set(toSearch.filter(s => s !== a && !searched.includes(s)))];
+          //TODO: loop through and replace items with a full str
+          toSearch.forEach(index => {
+            replaceVals(index, rules[index].str);
+          });
+        };
+        
+        "ab".split("").forEach(val => {
+          console.log("val", val);
+          let a = rules.findIndex(r => r.str.includes(val));
+          replaceVals(a, val);
+        });
+        
+        console.log(searched);
+        console.log(toSearch);
+        
+        const rl = rules.length;
+        console.log("rules length: " + rl, rules);
+        
+        const mess = input[1].split("\n");
+        const ml = mess.length;
+        console.log("mess length: " + ml);
+        
+        /*
+        const validate = (ri, m, mi) => {
+          const rule = rules[ri];
+          const char = m[mi];
+          console.log(ri, mi, char);
+          let isValid = true;
+          //for (let i = mi, msg = m.length; i < msg; i++) {
+            if (rule.char) {
+              console.log(rule.char);
+              isValid = isValid && (rule.char === char);
+            } else {
+              const rml = rule.multi.length;
+              for (let i = 0; i < rml; i++) {
+                const set = rule.multi[i];
+                let setValid = true;
+                for (let j = 0, sl = set.length; j < sl; j++) {
+                  setValid = setValid && validate(set[j], m, mi + j);
+                }
+                isValid = isValid || setValid;
+              }
+            }
+            if (!isValid) {
+              return false;
+            }
+          //}
+          
+          return false;
+        };
+        */
+        
+        const sum = mess.reduce((a, m) => {
+          console.log(m);
+          //if (validate(0, m, 0)) {
+          //  a++;
+          //}
+          return a;
+        }, 0);
+        console.log(sum);
+        return sum;
       },
       part2: data => {
         
