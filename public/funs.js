@@ -2145,6 +2145,82 @@
     },
     day20: {
       part1: data => {
+        const input = data.trim().split("\n\n").map(m => {
+          let tile = m.split("\n");
+          const key = tile.shift();
+          let item = {
+            key: +key.match(/\d+/)[0],
+            rows: tile.map(mm => mm.split("")),
+            matches: []
+          };
+          item.twelve = {
+            north: item.rows[0].join(""),
+            rnorth: item.rows[0].reverse().join(""),
+            south: item.rows[item.rows.length - 1].join(""),
+            rsouth: item.rows[item.rows.length - 1].reverse().join(""),
+            west: item.rows.reduce((a, c) => a + c[0], ""),
+            rwest: item.rows.reverse().reduce((a, c) => a + c[0], ""),
+            east: item.rows.reduce((a, c) => a + c[c.length - 1], ""),
+            reast: item.rows.reverse().reduce((a, c) => a + c[c.length - 1], "")
+          };
+          // rotate 90
+          item.three = {
+            north: item.twelve.west,
+            south: item.twelve.east,
+            west: item.twelve.south,
+            east: item.twelve.north
+          };
+          // rotate 180
+          item.six = {
+            north: item.three.west,
+            south: item.three.east,
+            west: item.three.south,
+            east: item.three.north
+          };
+          // rotate 270
+          item.nine = {
+            north: item.six.west,
+            south: item.six.east,
+            west: item.six.south,
+            east: item.six.north
+          };
+          
+          return item;
+        });
+        const il = input.length;
+        console.log("input length: " + il);
+        const dirs = ["north", "east", "south", "west"];
+        const rots = ["twelve", "three", "six", "nine"];
+        
+        // find matching sides
+        for (let i = 0; i < il; i++) {
+          const item = input[i];
+          for (let j = 0; j < il; j++) {
+            const b = input[j];
+            if (i !== j) {  // not this item
+              for (let r = 0; r < 4; r++) {
+                const rot = rots[r];
+                for (let d = 0; d < 4; d++) {
+                  const dir = dirs[d];
+                  //console.log(i, j, rot, dir, item[rot][dir], b.twelve.north);
+                  if (item[rot][dir] === b.twelve.north) {
+                    item.matches.push({
+                      self: {i:i,rot:rot,dir:dir},
+                      other: {i:j,rot:"twelve",dir:"north"}
+                    });
+                  }
+                  if (item[rot]["r" + dir] === b.twelve.north) {
+                    item.matches.push({
+                      self: {i:i,rot:rot,dir:"r" + dir},
+                      other: {i:j,rot:"twelve",dir:"north"}
+                    });
+                  }
+                }
+              }
+            }
+          }
+        }
+        console.log(input);
         
       },
       part2: data => {
