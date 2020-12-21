@@ -2154,35 +2154,47 @@
             matches: []
           };
           item.twelve = {
-            north: item.rows[0].join(""),
+            north:  item.rows[0].join(""),
             rnorth: item.rows[0].reverse().join(""),
-            south: item.rows[item.rows.length - 1].join(""),
+            east:   item.rows.reduce((a, c) => a + c[c.length - 1], ""),
+            reast:  item.rows.reduce((a, c) => a + c[c.length - 1], "").split("").reverse().join(""),
+            south:  item.rows[item.rows.length - 1].join(""),
             rsouth: item.rows[item.rows.length - 1].reverse().join(""),
-            west: item.rows.reduce((a, c) => a + c[0], ""),
-            rwest: item.rows.reverse().reduce((a, c) => a + c[0], ""),
-            east: item.rows.reduce((a, c) => a + c[c.length - 1], ""),
-            reast: item.rows.reverse().reduce((a, c) => a + c[c.length - 1], "")
+            west:   item.rows.reduce((a, c) => a + c[0], ""),
+            rwest:  item.rows.reduce((a, c) => a + c[0], "").split("").reverse().join("")
           };
           // rotate 90
           item.three = {
             north: item.twelve.west,
+            rnorth: item.twelve.rwest,
+            east:  item.twelve.north,
+            reast:  item.twelve.rnorth,
             south: item.twelve.east,
-            west: item.twelve.south,
-            east: item.twelve.north
+            rsouth: item.twelve.reast,
+            west:  item.twelve.south,
+            rwest:  item.twelve.rsouth
           };
           // rotate 180
           item.six = {
             north: item.three.west,
+            rnorth: item.three.rwest,
+            east:  item.three.north,
+            reast:  item.three.rnorth,
             south: item.three.east,
-            west: item.three.south,
-            east: item.three.north
+            rsouth: item.three.reast,
+            west:  item.three.south,
+            rwest:  item.three.rsouth
           };
           // rotate 270
           item.nine = {
             north: item.six.west,
+            rnorth: item.six.rwest,
+            east:  item.six.north,
+            reast:  item.six.rnorth,
             south: item.six.east,
-            west: item.six.south,
-            east: item.six.north
+            rsouth: item.six.reast,
+            west:  item.six.south,
+            rwest:  item.six.rsouth
           };
           
           return item;
@@ -2202,18 +2214,34 @@
                 const rot = rots[r];
                 for (let d = 0; d < 4; d++) {
                   const dir = dirs[d];
-                  //console.log(i, j, rot, dir, item[rot][dir], b.twelve.north);
-                  if (item[rot][dir] === b.twelve.north) {
-                    item.matches.push({
-                      self: {i:i,rot:rot,dir:dir},
-                      other: {i:j,rot:"twelve",dir:"north"}
-                    });
-                  }
-                  if (item[rot]["r" + dir] === b.twelve.north) {
-                    item.matches.push({
-                      self: {i:i,rot:rot,dir:"r" + dir},
-                      other: {i:j,rot:"twelve",dir:"north"}
-                    });
+                  for (let rr = 0; rr < 4; rr++) {
+                    const rrot = rots[rr];
+                    for (let dd = 0; dd < 4; dd++) {
+                      const ddir = dirs[dd];
+                      //console.log(i, j, rot, dir, item[rot][dir], b.twelve.north);
+                      if (item[rot][dir] === b[rrot][ddir]) {
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:dir},
+                          other: {i:j,rot:rrot,dir:ddir}
+                        });
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:"r" + dir},
+                          other: {i:j,rot:rrot,dir:"r" + ddir}
+                        });
+                      }
+                      if (item[rot]["r" + dir] === b[rrot][ddir]) {
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:"r" + dir},
+                          other: {i:j,rot:rrot,dir:ddir}
+                        });
+                      }
+                      if (item[rot][dir] === b[rrot]["r" + ddir]) {
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:dir},
+                          other: {i:j,rot:rrot,dir:"r" + ddir}
+                        });
+                      }
+                    }
                   }
                 }
               }
@@ -2221,14 +2249,68 @@
           }
         }
         console.log(input);
-        
+        //TODO:
       },
       part2: data => {
-        
+        //TODO:
       }
     },
     day21: {
       part1: data => {
+        const rx = /((?:\w+\s)+)\(contains\s((?:\w+,?\s?)+)\)/;
+        const input = data.trim().split("\n").map(m => {
+          const matched = m.match(rx);
+          return {
+            ingredients: matched[1].trim().split(" "),
+            allergens: matched[2].split(",").map(a => a.trim())
+          };
+        });
+        const il = input.length;
+        console.log(input, "input length: " + il);
+        
+        const allergens = [...new Set(input.reduce((a, i) => a.concat(i.allergens), []))];
+        console.log(allergens);
+        
+        const ingredients = input.reduce((a, i) => {
+          i.ingredients.forEach(ing => {
+            if (a[ing]) {
+              a[ing]++;
+            } else {
+              a[ing] = 1;
+            }
+          });
+          return a;
+        }, {});
+        console.log(ingredients);
+        
+        const counts = input.reduce((a, i) => {
+          for (let x = 0, xl = i.allergens.length; x < xl; x++) {
+            const allergen = i.allergens[x];
+            for (let y = 0, yl = i.ingredients.length; y < yl; y++) {
+              const ingredient = i.ingredients[y];
+              if (!a.allergens[allergen]) {
+                a.allergens[allergen] = {};
+              }
+              if (a.allergens[allergen][ingredient]) {
+                a.allergens[allergen][ingredient]++;
+              } else {
+                a.allergens[allergen][ingredient] = 1;
+              }
+              //
+              if (!a.ingredients[ingredient]) {
+                a.ingredients[ingredient] = {};
+              }
+              if (a.ingredients[ingredient][allergen]) {
+                a.ingredients[ingredient][allergen]++;
+              } else {
+                a.ingredients[ingredient][allergen] = 1;
+              }
+            }
+          }
+
+          return a;
+        }, { allergens: {}, ingredients: {} });
+        console.log(counts);
         
       },
       part2: data => {
