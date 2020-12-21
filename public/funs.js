@@ -2005,7 +2005,139 @@
     },
     day19: {
       part1: data => {
+        const input = data.trim().split("\n\n");
+        const il = input.length;
+        console.log("input length: " + il);
         
+        const rules = input[0].split("\n").map(m => {
+          const rule = m.split(":");
+          const index = +rule[0];
+          const right = rule[1].trim();
+          if (right.includes('"')) {
+            const char = right.replace(/\"/g, "");
+            return {
+              index: index,
+              char: char,
+              str: [ char ]
+            };
+          } else {
+            const multi = right.split("|").map(m => m.trim().split(" ").map(Number));
+            return {
+              index: index,
+              multi: multi,
+              vals: JSON.parse(JSON.stringify(multi)),
+              str: []
+            };
+          }
+        }).sort((a, b) => a.index - b.index);
+        
+        // optimize
+        let searched = [];
+        let toSearch = [];
+        const replaceVals = (a, str) => {
+          toSearch.push(a);
+          
+          let as = rules.filter(r => r.vals && r.vals.some(m => m.includes(a)));
+          console.log("as", as);
+          for (let l = as.length; l--;) {
+            let am = rules[as[l].index].vals;
+            console.log("am", am);
+            for (let ll = am.length; ll--;) {
+              let ai = -1;
+              let safety = 1000;
+              do {
+                ai = am[ll].indexOf(a);
+                console.log("ai", ai);
+                rules[as[l].index].vals[ll][ai] = str;
+              } while (am[ll].includes(a, ai + 1) && ai > -1 && safety--);
+              if (safety <= 0) {
+                console.warn("SAFETY hit!");
+              }
+            }
+          }
+          
+          let ass = rules.filter(r => !searched.includes(r.index) && r.vals && r.vals.some(m => m.every(mm => {
+            const mmm = typeof mm;
+            return mmm === "string" || mmm === "object";
+          })));
+          for (let l = ass.length; l--;) {
+            let amm = rules[ass[l].index].vals;
+            for (let ll = amm.length; ll--;) {
+              if (amm[ll].every(mm => mm => {
+                const mmm = typeof mm;
+                return mmm === "string" || mmm === "object";
+              })) {
+                console.log(as[l]);
+                // why is as[l] undefined? oh no!
+                rules[as[l].index].str[ll] = amm[ll].join("");
+              }
+            }
+            toSearch.push(ass[l].index);
+          }
+          
+          searched.push(a);
+          toSearch = [... new Set(toSearch.filter(s => s !== a && !searched.includes(s)))];
+          //TODO: loop through and replace items with a full str
+          toSearch.forEach(index => {
+            replaceVals(index, rules[index].str);
+          });
+        };
+        
+        "ab".split("").forEach(val => {
+          console.log("val", val);
+          let a = rules.findIndex(r => r.str.includes(val));
+          replaceVals(a, val);
+        });
+        
+        console.log(searched);
+        console.log(toSearch);
+        
+        const rl = rules.length;
+        console.log("rules length: " + rl, rules);
+        
+        const mess = input[1].split("\n");
+        const ml = mess.length;
+        console.log("mess length: " + ml);
+        
+        /*
+        const validate = (ri, m, mi) => {
+          const rule = rules[ri];
+          const char = m[mi];
+          console.log(ri, mi, char);
+          let isValid = true;
+          //for (let i = mi, msg = m.length; i < msg; i++) {
+            if (rule.char) {
+              console.log(rule.char);
+              isValid = isValid && (rule.char === char);
+            } else {
+              const rml = rule.multi.length;
+              for (let i = 0; i < rml; i++) {
+                const set = rule.multi[i];
+                let setValid = true;
+                for (let j = 0, sl = set.length; j < sl; j++) {
+                  setValid = setValid && validate(set[j], m, mi + j);
+                }
+                isValid = isValid || setValid;
+              }
+            }
+            if (!isValid) {
+              return false;
+            }
+          //}
+          
+          return false;
+        };
+        */
+        
+        const sum = mess.reduce((a, m) => {
+          console.log(m);
+          //if (validate(0, m, 0)) {
+          //  a++;
+          //}
+          return a;
+        }, 0);
+        console.log(sum);
+        return sum;
       },
       part2: data => {
         
@@ -2013,14 +2145,172 @@
     },
     day20: {
       part1: data => {
+        const input = data.trim().split("\n\n").map(m => {
+          let tile = m.split("\n");
+          const key = tile.shift();
+          let item = {
+            key: +key.match(/\d+/)[0],
+            rows: tile.map(mm => mm.split("")),
+            matches: []
+          };
+          item.twelve = {
+            north:  item.rows[0].join(""),
+            rnorth: item.rows[0].reverse().join(""),
+            east:   item.rows.reduce((a, c) => a + c[c.length - 1], ""),
+            reast:  item.rows.reduce((a, c) => a + c[c.length - 1], "").split("").reverse().join(""),
+            south:  item.rows[item.rows.length - 1].join(""),
+            rsouth: item.rows[item.rows.length - 1].reverse().join(""),
+            west:   item.rows.reduce((a, c) => a + c[0], ""),
+            rwest:  item.rows.reduce((a, c) => a + c[0], "").split("").reverse().join("")
+          };
+          // rotate 90
+          item.three = {
+            north: item.twelve.west,
+            rnorth: item.twelve.rwest,
+            east:  item.twelve.north,
+            reast:  item.twelve.rnorth,
+            south: item.twelve.east,
+            rsouth: item.twelve.reast,
+            west:  item.twelve.south,
+            rwest:  item.twelve.rsouth
+          };
+          // rotate 180
+          item.six = {
+            north: item.three.west,
+            rnorth: item.three.rwest,
+            east:  item.three.north,
+            reast:  item.three.rnorth,
+            south: item.three.east,
+            rsouth: item.three.reast,
+            west:  item.three.south,
+            rwest:  item.three.rsouth
+          };
+          // rotate 270
+          item.nine = {
+            north: item.six.west,
+            rnorth: item.six.rwest,
+            east:  item.six.north,
+            reast:  item.six.rnorth,
+            south: item.six.east,
+            rsouth: item.six.reast,
+            west:  item.six.south,
+            rwest:  item.six.rsouth
+          };
+          
+          return item;
+        });
+        const il = input.length;
+        console.log("input length: " + il);
+        const dirs = ["north", "east", "south", "west"];
+        const rots = ["twelve", "three", "six", "nine"];
         
+        // find matching sides
+        for (let i = 0; i < il; i++) {
+          const item = input[i];
+          for (let j = 0; j < il; j++) {
+            const b = input[j];
+            if (i !== j) {  // not this item
+              for (let r = 0; r < 4; r++) {
+                const rot = rots[r];
+                for (let d = 0; d < 4; d++) {
+                  const dir = dirs[d];
+                  for (let rr = 0; rr < 4; rr++) {
+                    const rrot = rots[rr];
+                    for (let dd = 0; dd < 4; dd++) {
+                      const ddir = dirs[dd];
+                      //console.log(i, j, rot, dir, item[rot][dir], b.twelve.north);
+                      if (item[rot][dir] === b[rrot][ddir]) {
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:dir},
+                          other: {i:j,rot:rrot,dir:ddir}
+                        });
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:"r" + dir},
+                          other: {i:j,rot:rrot,dir:"r" + ddir}
+                        });
+                      }
+                      if (item[rot]["r" + dir] === b[rrot][ddir]) {
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:"r" + dir},
+                          other: {i:j,rot:rrot,dir:ddir}
+                        });
+                      }
+                      if (item[rot][dir] === b[rrot]["r" + ddir]) {
+                        item.matches.push({
+                          self: {i:i,rot:rot,dir:dir},
+                          other: {i:j,rot:rrot,dir:"r" + ddir}
+                        });
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        console.log(input);
+        //TODO:
       },
       part2: data => {
-        
+        //TODO:
       }
     },
     day21: {
       part1: data => {
+        const rx = /((?:\w+\s)+)\(contains\s((?:\w+,?\s?)+)\)/;
+        const input = data.trim().split("\n").map(m => {
+          const matched = m.match(rx);
+          return {
+            ingredients: matched[1].trim().split(" "),
+            allergens: matched[2].split(",").map(a => a.trim())
+          };
+        });
+        const il = input.length;
+        console.log(input, "input length: " + il);
+        
+        const allergens = [...new Set(input.reduce((a, i) => a.concat(i.allergens), []))];
+        console.log(allergens);
+        
+        const ingredients = input.reduce((a, i) => {
+          i.ingredients.forEach(ing => {
+            if (a[ing]) {
+              a[ing]++;
+            } else {
+              a[ing] = 1;
+            }
+          });
+          return a;
+        }, {});
+        console.log(ingredients);
+        
+        const counts = input.reduce((a, i) => {
+          for (let x = 0, xl = i.allergens.length; x < xl; x++) {
+            const allergen = i.allergens[x];
+            for (let y = 0, yl = i.ingredients.length; y < yl; y++) {
+              const ingredient = i.ingredients[y];
+              if (!a.allergens[allergen]) {
+                a.allergens[allergen] = {};
+              }
+              if (a.allergens[allergen][ingredient]) {
+                a.allergens[allergen][ingredient]++;
+              } else {
+                a.allergens[allergen][ingredient] = 1;
+              }
+              //
+              if (!a.ingredients[ingredient]) {
+                a.ingredients[ingredient] = {};
+              }
+              if (a.ingredients[ingredient][allergen]) {
+                a.ingredients[ingredient][allergen]++;
+              } else {
+                a.ingredients[ingredient][allergen] = 1;
+              }
+            }
+          }
+
+          return a;
+        }, { allergens: {}, ingredients: {} });
+        console.log(counts);
         
       },
       part2: data => {

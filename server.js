@@ -151,11 +151,11 @@ fs.readFile(__dirname + "/public/funs.js", function (err, content) {
       const p1 = day["part 1"];
       const p2 = day["part 2"];
       a += "<li>" + k + "<ol><li>part 1 ";
-      a += "<b style='width:" + (100 * p1.charCount / funsJsCounts.maxChars) + "%'>" + p1.charCount + " chars</b> ";
-      a += "<b style='width:" + (100 * p1.lineCount / funsJsCounts.maxLines) + "%'>" + p1.lineCount + " lines</b>";
+      a += "<b style='width:" + (100 * p1.charCount / funsJsCounts.maxChars) + "%' title='" + Math.round(100 * p1.charCount / funsJsCounts.maxChars) + "%'>" + p1.charCount + " chars</b> ";
+      a += "<b style='width:" + (100 * p1.lineCount / funsJsCounts.maxLines) + "%' title='" + Math.round(100 * p1.lineCount / funsJsCounts.maxLines) + "%'>" + p1.lineCount + " lines</b>";
       a += "</li><li>part 2 ";
-      a += "<b style='width:" + (100 * p2.charCount / funsJsCounts.maxChars) + "%'>" + p2.charCount + " chars</b> ";
-      a += "<b style='width:" + (100 * p2.lineCount / funsJsCounts.maxLines) + "%'>" + p2.lineCount + " lines</b>";
+      a += "<b style='width:" + (100 * p2.charCount / funsJsCounts.maxChars) + "%' title='" + Math.round(100 * p2.charCount / funsJsCounts.maxChars) + "%'>" + p2.charCount + " chars</b> ";
+      a += "<b style='width:" + (100 * p2.lineCount / funsJsCounts.maxLines) + "%' title='" + Math.round(100 * p2.lineCount / funsJsCounts.maxLines) + "%'>" + p2.lineCount + " lines</b>";
       a += "</li></ol></li>";
     }
     return a;

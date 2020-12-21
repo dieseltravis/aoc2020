@@ -76,7 +76,7 @@ textarea {
 
 code {
   display: block;
-  margin: auto;
+  margin: 0.5em;
   font-family: monospace, monospace;
   font-size: 1em;
 }
