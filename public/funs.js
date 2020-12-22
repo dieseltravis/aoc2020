@@ -2440,23 +2440,36 @@
         const il = input.length;
         console.log(input, "input length: " + il);
 
-        let safety = 10000;
+        let safety = 1000000000000;
         const play = (p1, p2) => {
-          while (safety-- && p1.length && p2.length) {
+          while (safety-- > 0 && p1.length && p2.length) {
             const card1 = p1.shift();
             const card2 = p2.shift();
-            //test
-            if (card1 > card2) {
-              p1.push(card1);
-              p1.push(card2);
-            } else if (card1 < card2) {
-              p2.push(card2);
-              p2.push(card1);
+            
+            //test for sub
+            if (card1 === p1.length || card2 === p2.length) {
+              const win = play(p1.slice(), p2.slice());
+              if (win === 0) {
+                p1.push(card1);
+                p1.push(card2);                
+              } else {
+                p2.push(card2);
+                p2.push(card1);
+              }
+            } else {
+              if (card1 > card2) {
+                p1.push(card1);
+                p1.push(card2);
+              } else {
+                p2.push(card2);
+                p2.push(card1);
+              }
             }
           }
           
           if (safety <= 0) {
             console.warn("SAFETY hit!");
+            throw ("safety.");
           }
           
           return p1.length < p2.length ? 1 : 0;
