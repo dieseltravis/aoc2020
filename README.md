@@ -27,6 +27,7 @@ also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 19. [day nineteen](https://open-lovely-doom.glitch.me/day/19) WIP
 20. [day twenty](https://open-lovely-doom.glitch.me/day/20) WIP
 21. [day twentyone](https://open-lovely-doom.glitch.me/day/21) WIP
+22. [day twentytwo](https://open-lovely-doom.glitch.me/day/22) Part 2 still running
 
 ## previous years:
 

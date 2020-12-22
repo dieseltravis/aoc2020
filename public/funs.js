@@ -2148,6 +2148,7 @@
         const input = data.trim().split("\n\n").map(m => {
           let tile = m.split("\n");
           const key = tile.shift();
+          const toBits = (text) => { return parseInt(text.replace(/#/g,"1").replace(/\./g,"0"), 2); };
           let item = {
             key: +key.match(/\d+/)[0],
             rows: tile.map(mm => mm.split("")),
@@ -2155,14 +2156,22 @@
           };
           item.twelve = {
             north:  item.rows[0].join(""),
-            rnorth: item.rows[0].reverse().join(""),
+            rnorth: item.rows[0].slice().reverse().join(""),
             east:   item.rows.reduce((a, c) => a + c[c.length - 1], ""),
-            reast:  item.rows.reduce((a, c) => a + c[c.length - 1], "").split("").reverse().join(""),
-            south:  item.rows[item.rows.length - 1].join(""),
-            rsouth: item.rows[item.rows.length - 1].reverse().join(""),
-            west:   item.rows.reduce((a, c) => a + c[0], ""),
-            rwest:  item.rows.reduce((a, c) => a + c[0], "").split("").reverse().join("")
+            reast:  item.rows.reduce((a, c) => c[c.length - 1] + a, ""),
+            south:  item.rows[item.rows.length - 1].slice().reverse().join(""),
+            rsouth: item.rows[item.rows.length - 1].join(""),
+            west:   item.rows.reduce((a, c) => c[0] + a, ""),
+            rwest:  item.rows.reduce((a, c) => a + c[0], "")
           };
+          item.twelve.vn = toBits(item.twelve.north);
+          item.twelve.vrn = toBits(item.twelve.rnorth);
+          item.twelve.ve = toBits(item.twelve.east);
+          item.twelve.vre = toBits(item.twelve.reast);
+          item.twelve.vs = toBits(item.twelve.south);
+          item.twelve.vrs = toBits(item.twelve.rsouth);
+          item.twelve.vw = toBits(item.twelve.west);
+          item.twelve.vrw = toBits(item.twelve.rwest);
           // rotate 90
           item.three = {
             north: item.twelve.west,
@@ -2172,7 +2181,16 @@
             south: item.twelve.east,
             rsouth: item.twelve.reast,
             west:  item.twelve.south,
-            rwest:  item.twelve.rsouth
+            rwest:  item.twelve.rsouth,
+            // numeric:
+            vn: item.twelve.vw,
+            vrn: item.twelve.vrw,
+            ve: item.twelve.vn,
+            vre: item.twelve.vrn,
+            vs: item.twelve.ve,
+            vrs: item.twelve.vre,
+            vw: item.twelve.vs,
+            vrw: item.twelve.vrs
           };
           // rotate 180
           item.six = {
@@ -2183,7 +2201,16 @@
             south: item.three.east,
             rsouth: item.three.reast,
             west:  item.three.south,
-            rwest:  item.three.rsouth
+            rwest:  item.three.rsouth,
+            // numeric:
+            vn: item.three.vw,
+            vrn: item.three.vrw,
+            ve: item.three.vn,
+            vre: item.three.vrn,
+            vs: item.three.ve,
+            vrs: item.three.vre,
+            vw: item.three.vs,
+            vrw: item.three.vrs
           };
           // rotate 270
           item.nine = {
@@ -2194,7 +2221,16 @@
             south: item.six.east,
             rsouth: item.six.reast,
             west:  item.six.south,
-            rwest:  item.six.rsouth
+            rwest:  item.six.rsouth,
+            // numeric:
+            vn: item.six.vw,
+            vrn: item.six.vrw,
+            ve: item.six.vn,
+            vre: item.six.vrn,
+            vs: item.six.ve,
+            vrs: item.six.vre,
+            vw: item.six.vs,
+            vrw: item.six.vrs
           };
           
           return item;
@@ -2202,6 +2238,7 @@
         const il = input.length;
         console.log("input length: " + il);
         const dirs = ["north", "east", "south", "west"];
+        const nums = ["vn", "vrn", "ve", "vre", "vs", "vrs", "vw", "vrw"];
         const rots = ["twelve", "three", "six", "nine"];
         
         // find matching sides
@@ -2212,33 +2249,20 @@
             if (i !== j) {  // not this item
               for (let r = 0; r < 4; r++) {
                 const rot = rots[r];
-                for (let d = 0; d < 4; d++) {
-                  const dir = dirs[d];
+                //for (let d = 0; d < 4; d++) {
+                //  const dir = dirs[d];
+                for (let d = 0; d < 8; d++) {
+                  const dir = nums[d];
                   for (let rr = 0; rr < 4; rr++) {
                     const rrot = rots[rr];
-                    for (let dd = 0; dd < 4; dd++) {
-                      const ddir = dirs[dd];
-                      //console.log(i, j, rot, dir, item[rot][dir], b.twelve.north);
+                    //for (let dd = 0; dd < 4; dd++) {
+                    //  const ddir = dirs[dd];
+                    for (let dd = 0; dd < 8; dd++) {
+                      const ddir = nums[dd];
                       if (item[rot][dir] === b[rrot][ddir]) {
                         item.matches.push({
                           self: {i:i,rot:rot,dir:dir},
                           other: {i:j,rot:rrot,dir:ddir}
-                        });
-                        item.matches.push({
-                          self: {i:i,rot:rot,dir:"r" + dir},
-                          other: {i:j,rot:rrot,dir:"r" + ddir}
-                        });
-                      }
-                      if (item[rot]["r" + dir] === b[rrot][ddir]) {
-                        item.matches.push({
-                          self: {i:i,rot:rot,dir:"r" + dir},
-                          other: {i:j,rot:rrot,dir:ddir}
-                        });
-                      }
-                      if (item[rot][dir] === b[rrot]["r" + ddir]) {
-                        item.matches.push({
-                          self: {i:i,rot:rot,dir:dir},
-                          other: {i:j,rot:rrot,dir:"r" + ddir}
                         });
                       }
                     }
@@ -2249,6 +2273,28 @@
           }
         }
         console.log(input);
+        
+        const transform = (tx) => {
+          const o = input[tx.i];
+          const r = tx.rot;
+        };
+        const check = (match, matchedIndeces) => {
+          //transform tile for the match in self, 
+          transform(match.self)
+          //check matches of other for matching orientation where not in matched indeces
+        };
+        for (let i = 0; i < il; i++) {
+          for (let j = 0, jl = input[i].matches.length; j < jl; j++) {
+            let used = [i];
+            check(input[i].matches[j], used);
+            if (used.length === il) {
+              break;
+            }
+          }
+        }
+        
+        //find corners
+        
         //TODO:
       },
       part2: data => {
@@ -2312,17 +2358,135 @@
         }, { allergens: {}, ingredients: {} });
         console.log(counts);
         
+        let temp = Object.keys(ingredients);
+        
+        const filter = allergens.reduce((acc, a) => {
+          const sub = input.filter(item => item.allergens.includes(a));
+          const not = input.filter(item => !item.allergens.includes(a));
+          const included = sub.map(m => m.ingredients);
+          const excluded = not.map(m => m.ingredients);
+          included.forEach(x => x.forEach(ing => {
+            if (excluded.some(ex => ex.includes(ing))) {
+              acc.excluded.push(ing);
+            } else {
+              acc.included.push(ing);
+            }
+          }, []));
+          return acc;
+        }, { included: [], excluded: [] });
+        console.log(filter);
+        // this is not complete:
+        const uniqueSafe = new Set(filter.included);
+        console.log(uniqueSafe);
+        // shit, I need that other one too, and when I use actual input I get 0 entries
+        
+        const filter2 = allergens.reduce((acc, a) => {
+          const sub = input.filter(item => item.allergens.includes(a));
+          const not = input.filter(item => !item.allergens.includes(a));
+          const included = sub.map(m => m.ingredients);
+          const excluded = not.map(m => m.ingredients);
+          included.forEach((x,i) => x.forEach(ing => {
+            if (included.some((ex, i2) => (i!==i2) && ex.includes(ing))) {
+              acc.included.push(ing);
+            } else {
+              acc.excluded.push(ing);
+            }
+          }, []));
+          return acc;
+        }, { included: [], excluded: [] });
+        console.log(filter2);
+        // nope
       },
       part2: data => {
+       //Player 1:
+//25
+//37
         
       }
     },
     day22: {
       part1: data => {
+        const input = data.trim().split("\n\n").map(m => m.split("\n").slice(1).map(Number));
+        const il = input.length;
+        console.log(input, "input length: " + il);
         
+        let safety = 10000;
+        let p1 = { i:0, deck: input[0].slice() };
+        let p2 = { i:0, deck: input[1].slice() };
+        while (safety-- && p1.deck.length && p2.deck.length) {
+          const card1 = p1.deck.shift();
+          const card2 = p2.deck.shift();
+          if (card1 > card2) {
+            p1.deck.push(card1);
+            p1.deck.push(card2);
+          } else if (card1 < card2) {
+            p2.deck.push(card2);
+            p2.deck.push(card1);
+          }
+        }
+        if (safety <= 0) {
+          console.warn("SAFETY hit!");
+        }
+        console.log("p1: ", p1);
+        console.log("p2: ", p2);
+        const winner = p1.deck.length < p2.deck.length ? p2 : p1;
+        let dl = winner.deck.length;
+        const score = winner.deck.reduce((acc, c) => acc + (c * dl--), 0);
+        console.log(score);
+        return score;
       },
       part2: data => {
+        const input = data.trim().split("\n\n").map(m => m.split("\n").slice(1).map(Number));
+        const il = input.length;
+        console.log(input, "input length: " + il);
+
+        let safety = 1000000000000;
+        const play = (p1, p2) => {
+          while (safety-- > 0 && p1.length && p2.length) {
+            const card1 = p1.shift();
+            const card2 = p2.shift();
+            
+            //test for sub
+            if (card1 === p1.length || card2 === p2.length) {
+              const win = play(p1.slice(), p2.slice());
+              if (win === 0) {
+                p1.push(card1);
+                p1.push(card2);                
+              } else {
+                p2.push(card2);
+                p2.push(card1);
+              }
+            } else {
+              if (card1 > card2) {
+                p1.push(card1);
+                p1.push(card2);
+              } else {
+                p2.push(card2);
+                p2.push(card1);
+              }
+            }
+          }
+          
+          if (safety <= 0) {
+            console.warn("SAFETY hit!");
+            throw ("safety.");
+          }
+          
+          return p1.length < p2.length ? 1 : 0;
+        };
         
+        let p1d = input[0].slice();
+        let p2d = input[1].slice();
+        
+        console.log("p1: ", p1d);
+        console.log("p2: ", p2d);
+        const winner = play(p1d, p2d) === 0 ? p1d : p2d;
+        
+        let dl = winner.length;
+        const score = winner.reduce((acc, c) => acc + (c * dl--), 0);
+        console.log(score);
+        
+        return score;
       }
     },
     day23: {
