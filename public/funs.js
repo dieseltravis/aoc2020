@@ -2436,7 +2436,44 @@
         return score;
       },
       part2: data => {
+        const input = data.trim().split("\n\n").map(m => m.split("\n").slice(1).map(Number));
+        const il = input.length;
+        console.log(input, "input length: " + il);
+
+        let safety = 10000;
+        const play = (p1, p2) => {
+          while (safety-- && p1.length && p2.length) {
+            const card1 = p1.shift();
+            const card2 = p2.shift();
+            //test
+            if (card1 > card2) {
+              p1.push(card1);
+              p1.push(card2);
+            } else if (card1 < card2) {
+              p2.push(card2);
+              p2.push(card1);
+            }
+          }
+          
+          if (safety <= 0) {
+            console.warn("SAFETY hit!");
+          }
+          
+          return p1.length < p2.length ? 1 : 0;
+        };
         
+        let p1d = input[0].slice();
+        let p2d = input[1].slice();
+        
+        console.log("p1: ", p1d);
+        console.log("p2: ", p2d);
+        const winner = play(p1d, p2d) === 0 ? p1d : p2d;
+        
+        let dl = winner.length;
+        const score = winner.reduce((acc, c) => acc + (c * dl--), 0);
+        console.log(score);
+        
+        return score;
       }
     },
     day23: {
