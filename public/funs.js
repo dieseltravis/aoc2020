@@ -2440,8 +2440,16 @@
         const il = input.length;
         console.log(input, "input length: " + il);
 
-        let safety = 1000000000000;
+        let safety = 100000000000000;
+        let cache = {
+          //"a,b:b,c": 1
+        };
         const play = (p1, p2) => {
+          const key = p1.join(",") + ":" + p1.join(",");
+          // shortcut
+          if (typeof cache[key] === "number") {
+            return cache[key]
+          }
           while (safety-- > 0 && p1.length && p2.length) {
             const card1 = p1.shift();
             const card2 = p2.shift();
@@ -2472,7 +2480,9 @@
             throw ("safety.");
           }
           
-          return p1.length < p2.length ? 1 : 0;
+          const won = p1.length < p2.length ? 1 : 0;
+          cache[key] = won;
+          return won;
         };
         
         let p1d = input[0].slice();
@@ -2485,6 +2495,7 @@
         let dl = winner.length;
         const score = winner.reduce((acc, c) => acc + (c * dl--), 0);
         console.log(score);
+        //console.log(cache);
         
         return score;
       }
