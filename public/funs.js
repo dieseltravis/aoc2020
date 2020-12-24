@@ -2867,6 +2867,7 @@
             }
           }
           
+          // error, gettong 18 instead of 15
           grid = xxgrid;
           console.log(grid);
           displayGrid(grid);
