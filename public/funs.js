@@ -2669,10 +2669,212 @@
     },
     day24: {
       part1: data => {
+        const rx = /e|se|sw|w|nw|ne/g;
+        const input = data.trim().split("\n").map(m => m.match(rx));
+        const il = input.length;
+        console.log(input, "input length: " + il);
+        // assume the grid is squares shifting between even and odd each row
+        // a b c d e
+        //  f g h i
+        // j k l m n
+        const move = (start, dir) => {
+          let end = { x: start.x, y: start.y };
+          if (dir === 'e') {
+            end.x += 2;
+          } else if (dir === 'se') {
+            end.y -= 1;
+            end.x += 1;
+          } else if (dir === 'sw') {
+            end.y -= 1;
+            end.x -= 1;
+          } else if (dir === 'w') {
+            end.x -= 2;
+          } else if (dir === 'nw') {
+            end.y += 1;
+            end.x -= 1;
+          } else if (dir === 'ne') {
+            end.y += 1;
+            end.x += 1;
+          }
+          return end;
+        };
+        // only store black tiles
+        let grid = [];
+        const flip = (tile) => {
+          const any = grid.some(t => t.y === tile.y && t.x === tile.x);
+          if (!any) {
+            //console.log("to black");
+            grid.push({ x: tile.x, y: tile.y });
+          } else {
+            //console.log("to white");
+            grid = grid.filter(t => !(t.y === tile.y && t.x === tile.x));
+          }
+        };
         
+        let current = { x: 0, y: 0 };
+        for (let i = 0; i < il; i++) {
+          current = { x: 0, y: 0 };
+          const line = input[i];
+          const jl = line.length;
+          for (let j = 0; j < jl; j++) {
+            const dir = line[j];
+            current = move(current, dir);
+            //console.log(dir, current);
+            if (j === jl - 1) {
+              flip(current);
+            }
+          }
+        }
+        
+        console.log(current);
+        console.log(grid);
+        return grid.length;
       },
       part2: data => {
+        const rx = /e|se|sw|w|nw|ne/g;
+        const input = data.trim().split("\n").map(m => m.match(rx));
+        const il = input.length;
+        console.log(input, "input length: " + il);
+        // assume the grid is squares shifting between even and odd each row
+        // a b c d e
+        //  f g h i
+        // j k l m n
+        const move = (start, dir) => {
+          let end = { x: start.x, y: start.y };
+          if (dir === 'e') {
+            end.x += 2;
+          } else if (dir === 'se') {
+            end.y -= 1;
+            end.x += 1;
+          } else if (dir === 'sw') {
+            end.y -= 1;
+            end.x -= 1;
+          } else if (dir === 'w') {
+            end.x -= 2;
+          } else if (dir === 'nw') {
+            end.y += 1;
+            end.x -= 1;
+          } else if (dir === 'ne') {
+            end.y += 1;
+            end.x += 1;
+          }
+          return end;
+        };
         
+        // only store black tiles
+        let grid = [];
+        const flip = (tile) => {
+          const tx = tile.x, ty = tile.y;
+          const any = grid.some(t => t.y === ty && t.x === tx);
+          if (!any) {
+              grid.push({ x: tx, y: tile.y });
+          } else {
+              grid = grid.filter(t => !(t.y === ty && t.x === tx));
+          }
+        };
+        const flip2 = (tile, refgrid, newgrid) => {
+          const tx = tile.x, ty = tile.y;
+          const any = refgrid.some(t => t.y === ty && t.x === tx);
+          const neighbors = refgrid.filter(t => 
+                                            (t.x === (tx + 2) && t.y == ty) || // e 
+                                            (t.x === (tx + 1) && t.y == (ty - 1)) || // se 
+                                            (t.x === (tx - 1) && t.y == (ty - 1)) || // sw 
+                                            (t.x === (tx - 2) && t.y == ty) || // w
+                                            (t.x === (tx - 1) && t.y == (ty + 1))|| // nw 
+                                            (t.x === (tx + 1) && t.y == (ty + 1)) // ne 
+                                          ).length;
+          if (!any) {
+            // ===2 neighbors then flip black
+            if (neighbors === 2) {
+              newgrid.push({ x: tx, y: tile.y });
+            }
+          } else {
+            // zero or >2 neighbors then flip white
+            if (neighbors === 0 || neighbors > 2) {
+              newgrid = newgrid.filter(t => !(t.y === ty && t.x === tx));
+            }
+          }
+        };
+        
+        const displayGrid = (dgrid) => {
+          const miny = Math.min(...dgrid.map(t => t.y));
+          const maxy = Math.max(...dgrid.map(t => t.y));
+          const minx = Math.min(...dgrid.map(t => t.x));
+          const maxx = Math.max(...dgrid.map(t => t.x));
+          let blank = "";
+          for (let y = miny - 1; y < maxy + 2; y++) {
+            for (let x = minx - 2; x < maxx + 3; x++) {
+              const tx = x, ty = y;
+              if (dgrid.some(t => t.x === tx && t.y === ty)) {
+                blank += 'B';
+              } else {
+                // figure out if any could be white
+                if (y % 2) {
+                  if (x % 2) {
+                    blank += 'W';
+                  } else {
+                    blank += ' ';
+                  }
+                } else {
+                  if (x % 2) {
+                    blank += ' ';
+                  } else {
+                    blank += 'W';
+                  }
+                }
+              }
+            }
+            blank += "\n";
+          }
+          console.log(blank);
+        };
+        
+        let current = { x: 0, y: 0 };
+        for (let i = 0; i < il; i++) {
+          current = { x: 0, y: 0 };
+          const line = input[i];
+          const jl = line.length;
+          for (let j = 0; j < jl; j++) {
+            const dir = line[j];
+            current = move(current, dir);
+            if (j === jl - 1) {
+              flip(current);
+            }
+          }
+        }
+        console.log("grid", grid);
+        displayGrid(grid);
+        
+        const days = 1;
+        for (let d = 0; d < days; d++) {
+          let xxgrid = JSON.parse(JSON.stringify(grid));
+          const miny = Math.min(...xxgrid.map(t => t.y));
+          const maxy = Math.max(...xxgrid.map(t => t.y));
+          const minx = Math.min(...xxgrid.map(t => t.x));
+          const maxx = Math.max(...xxgrid.map(t => t.x));
+          for (let y = miny - 1; y < maxy + 2; y++) {
+            for (let x = minx - 2; x < maxx + 3; x++) {
+              // figure out if any could be a tile
+              if (y % 2) {
+                if (x % 2) {
+                  flip2({ x: x, y: y}, grid, xxgrid);
+                }
+              } else {
+                if (!(x % 2)) {
+                  flip2({ x: x, y: y}, grid, xxgrid);
+                }
+              }
+            }
+          }
+          
+          // error, gettong 18 instead of 15
+          grid = xxgrid;
+          console.log(grid);
+          displayGrid(grid);
+        }
+        
+        console.log(grid.length);
+        return grid.length;
       }
     },
     day25: {
