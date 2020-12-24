@@ -2505,7 +2505,7 @@
         const input = data.trim().split("").map(Number);
         let output = input.slice();
         const il = input.length;
-        //console.log(input, "input length: " + il);
+        console.log(input, "input length: " + il);
 
         const min = Math.min(...input);
         const max = Math.max(...input);
@@ -2564,7 +2564,7 @@
         
         for(let i = cycles; i--;) {
           run();
-          console.log(output.join(""));
+          //console.log(output.join(""));
         }
         
         // shift on one
@@ -2578,7 +2578,93 @@
         return answer;
       },
       part2: data => {
+        const input = data.trim().split("").map(Number);
+
+        const min = Math.min(...input);
+        const max = Math.max(...input);
+        const bigmax = 1000000;
+        let next = max + 1;
+        while (next <= bigmax) {
+          input.push(next);
+          next++;
+        }
+        const il = input.length;
+        console.log(input, "input length: " + il);
+        let output = input.slice();
         
+        let current = 0;
+        //console.log("min:", min, " max:", max, " current:", current, " value:", output[current]);
+        
+        //const cycles = 10;
+        const cycles = 10000000;
+        const selected = 3;
+        
+        const findNextIndex = (currentLabel) => {
+          let nextLabel = currentLabel - 1;
+          if (nextLabel < min) {
+            nextLabel = bigmax;
+          }
+          //console.log(currentLabel, nextLabel);
+          let nextIndex = output.indexOf(nextLabel)
+          if (nextIndex === -1) {
+            nextIndex = findNextIndex(nextLabel);
+          }
+          return nextIndex;
+        };
+        
+        const run = () => {
+          let selectedIndexes = [];
+          let selectedValues = [];
+          const currentValue = output[current];
+          for (let i = 0; i < selected; i++) {
+            let next = current + 1 + i;
+            if (next >= il) {
+              next -= il;
+            }
+            selectedIndexes.push(next);
+            selectedValues.push(output[next]);
+          }
+          //console.log("current", current, currentValue);
+          //console.log(selectedValues);
+          output = output.filter((v, i) => !selectedIndexes.includes(i));
+          //console.log(output);
+
+          let nextIndex = findNextIndex(currentValue);
+          const newValue = output[nextIndex];
+          //console.log("destination", nextIndex, newValue);
+          const left = output.slice(0, nextIndex + 1);
+          const right = output.slice(nextIndex + 1);
+          output = left.concat(selectedValues).concat(right);
+          // no:
+          //current++;
+          current = output.indexOf(currentValue) + 1;
+          if (current >= il) {
+            current = 0;
+          }
+          
+        };
+        
+        for(let i = cycles; i--;) {
+          run();
+          //console.log(output.join(""));
+        }
+        
+        // shift on one
+        console.log(output);
+        const oneAt = output.indexOf(1);
+        let nextOneIndex = oneAt + 1;
+        if (nextOneIndex >= il) {
+          nextOneIndex -= il;
+        }
+        let nextTwoIndex = oneAt + 2;
+        if (nextTwoIndex >= il) {
+          nextTwoIndex -= il;
+        }
+        
+        console.log(output[nextOneIndex], output[nextTwoIndex]);
+        const answer = output[nextOneIndex] * output[nextTwoIndex];
+        console.log(answer);
+        return answer;
       }
     },
     day24: {
