@@ -2774,26 +2774,22 @@
         };
         const flip2 = (tile, refgrid, newgrid) => {
           const tx = tile.x, ty = tile.y;
-          const any = refgrid.some(t => t.y === ty && t.x === tx);
-          const neighbors = refgrid.filter(t => 
-                                            (t.x === (tx + 2) && t.y == ty) || // e 
-                                            (t.x === (tx + 1) && t.y == (ty - 1)) || // se 
-                                            (t.x === (tx - 1) && t.y == (ty - 1)) || // sw 
-                                            (t.x === (tx - 2) && t.y == ty) || // w
-                                            (t.x === (tx - 1) && t.y == (ty + 1))|| // nw 
-                                            (t.x === (tx + 1) && t.y == (ty + 1)) // ne 
-                                          ).length;
-          if (!any) {
+          const isBlack = refgrid.some(t => t.y === ty && t.x === tx);
+          const around = [ move(tile, 'e'), move(tile, 'se'), move(tile, 'sw'), 
+                           move(tile, 'w'), move(tile, 'nw'), move(tile, 'ne') ];
+          const neighbors = refgrid.filter(t => around.some(tt => tt.x === t.x && tt.y === t.y)).length;
+          if (isBlack) {
+            // zero or >2 neighbors then flip white
+            if (neighbors <= 0 || neighbors > 2) {
+              newgrid = newgrid.filter(t => !(t.y === ty && t.x === tx));
+            }
+          } else {
             // ===2 neighbors then flip black
             if (neighbors === 2) {
               newgrid.push({ x: tx, y: tile.y });
             }
-          } else {
-            // zero or >2 neighbors then flip white
-            if (neighbors === 0 || neighbors > 2) {
-              newgrid = newgrid.filter(t => !(t.y === ty && t.x === tx));
-            }
           }
+          return newgrid;
         };
         
         const displayGrid = (dgrid) => {
@@ -2809,18 +2805,10 @@
                 blank += 'B';
               } else {
                 // figure out if any could be white
-                if (y % 2) {
-                  if (x % 2) {
-                    blank += 'W';
-                  } else {
-                    blank += ' ';
-                  }
+                if ((y % 2 && x % 2) || (!(y % 2) && !(x % 2))) {
+                  blank += 'W';
                 } else {
-                  if (x % 2) {
-                    blank += ' ';
-                  } else {
-                    blank += 'W';
-                  }
+                  blank += ' ';
                 }
               }
             }
@@ -2845,7 +2833,7 @@
         console.log("grid", grid);
         displayGrid(grid);
         
-        const days = 1;
+        const days = 100;
         for (let d = 0; d < days; d++) {
           let xxgrid = JSON.parse(JSON.stringify(grid));
           const miny = Math.min(...xxgrid.map(t => t.y));
@@ -2855,22 +2843,19 @@
           for (let y = miny - 1; y < maxy + 2; y++) {
             for (let x = minx - 2; x < maxx + 3; x++) {
               // figure out if any could be a tile
-              if (y % 2) {
-                if (x % 2) {
-                  flip2({ x: x, y: y}, grid, xxgrid);
-                }
-              } else {
-                if (!(x % 2)) {
-                  flip2({ x: x, y: y}, grid, xxgrid);
-                }
+              const tx = x, ty = y;
+              if (grid.some(t => t.x === tx && t.y === ty) || ((y % 2 && x % 2) || (!(y % 2) && !(x % 2)))) {
+                xxgrid = flip2({ x: tx, y: ty}, grid, xxgrid);
               }
             }
           }
           
           // error, gettong 18 instead of 15
           grid = xxgrid;
-          console.log(grid);
-          displayGrid(grid);
+          //console.log(grid);
+          //console.log("miny:", miny, " maxy:", maxy, " minx:", minx, " maxx:", maxx);
+          //displayGrid(grid);
+          console.log((d+1), ":", grid.length);
         }
         
         console.log(grid.length);
