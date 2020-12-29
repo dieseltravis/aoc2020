@@ -109,7 +109,7 @@ fs.readFile(__dirname + "/public/funs.js", function (err, content) {
   }
   funsJs = content.toString();
 
-  let funsJsLines = funsJs.split("\n").map(l => l.trim()).filter(l => l !== "");
+  let funsJsLines = funsJs.split("\n").map(l => l.trim()).filter(l => l !== "" && !l.startsWith("\\\\"));
 
   let curDay = -1;
   let curPart = -1;
