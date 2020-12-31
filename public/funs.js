@@ -2912,11 +2912,12 @@
         const door_num = transform(door, card_loop);
         
         const result = card_num + "," + door_num;
+        // if these are the same number then it "works"
         console.log(result);
         return result;
       },
       part2: data => {
-        
+        // I guess I have to finish all the other parts first?
       }
     }
   };
