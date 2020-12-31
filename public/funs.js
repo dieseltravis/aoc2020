@@ -2864,17 +2864,64 @@
     },
     day25: {
       part1: data => {
+        const input = data.trim().split("\n").map(Number);
+        const card = input[0];
+        const door = input[1];
+        const il = input.length;
+        console.log(input, "input length: " + il);
         
+        const transform = (subject, loop) => {
+          const remainder = 20201227;
+
+          let result = 1;
+          for (let i = 0; i < loop; i++) {
+            result = result * subject;
+            result = result % remainder;
+          }
+          
+          return result;
+        };
+        
+        //const sevens = [];
+        let safety = 10000000;
+        let loop = 1;
+        let card_loop = 0;
+        let door_loop = 0;
+        while (safety--) {
+          const seven = transform(7, loop);
+          if (seven === card) {
+            card_loop = loop;
+          }
+          if (seven === door) {
+            door_loop = loop;
+          }
+          if (card_loop > 0 && door_loop > 0) {
+            break;
+          }
+          loop++;
+        }
+        
+        console.log(card_loop, door_loop);
+        
+        if (safety <= 0) {
+          console.warn("SAFETY hit!");
+          //throw ("safety.");
+        }
+        
+        const card_num = transform(card, door_loop);
+        const door_num = transform(door, card_loop);
+        
+        const result = card_num + "," + door_num;
+        // if these are the same number then it "works"
+        console.log(result);
+        return result;
       },
       part2: data => {
-        
+        // I guess I have to finish all the other parts first?
       }
     }
   };
 
-  const funs = function(day, part) {
-    return all["day" + day]["part" + part];
-  };
-
-  this.funs = funs;
+  this.funs = (day, part) => all["day" + day]["part" + part];
+  
 }.call(this));

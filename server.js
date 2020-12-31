@@ -148,25 +148,29 @@ fs.readFile(__dirname + "/public/funs.js", function (err, content) {
   const statHtml = Object.keys(funsJsCounts).reduce((a, k) => {
     if (!k.startsWith("max")) {
       const day = funsJsCounts[k];
+      const key = k.replace(/\s/, "_");
       const p1 = day["part 1"];
       const p2 = day["part 2"];
-      a += "<li>" + k + "<ol><li>part 1 ";
-      a += "<b style='width:" + (100 * p1.charCount / funsJsCounts.maxChars) + "%' title='" + Math.round(100 * p1.charCount / funsJsCounts.maxChars) + "%'>" + p1.charCount + " chars</b> ";
-      a += "<b style='width:" + (100 * p1.lineCount / funsJsCounts.maxLines) + "%' title='" + Math.round(100 * p1.lineCount / funsJsCounts.maxLines) + "%'>" + p1.lineCount + " lines</b>";
-      a += "</li><li>part 2 ";
-      a += "<b style='width:" + (100 * p2.charCount / funsJsCounts.maxChars) + "%' title='" + Math.round(100 * p2.charCount / funsJsCounts.maxChars) + "%'>" + p2.charCount + " chars</b> ";
-      a += "<b style='width:" + (100 * p2.lineCount / funsJsCounts.maxLines) + "%' title='" + Math.round(100 * p2.lineCount / funsJsCounts.maxLines) + "%'>" + p2.lineCount + " lines</b>";
+      a += "<li id='" + key + "'>" + k + "<ol><li id='" + key + "_part_1'>part 1 ";
+      a += "<b id='" + key + "_part_1_chars' style='width:" + (100 * p1.charCount / funsJsCounts.maxChars) + "%' title='" + Math.round(100 * p1.charCount / funsJsCounts.maxChars) + "%'>" + p1.charCount + " chars</b> ";
+      a += "<b id='" + key + "_part_1_lines' style='width:" + (100 * p1.lineCount / funsJsCounts.maxLines) + "%' title='" + Math.round(100 * p1.lineCount / funsJsCounts.maxLines) + "%'>" + p1.lineCount + " lines</b>";
+      a += "</li><li id='" + key + "_part_2'>part 2 ";
+      a += "<b id='" + key + "_part_2_chars' style='width:" + (100 * p2.charCount / funsJsCounts.maxChars) + "%' title='" + Math.round(100 * p2.charCount / funsJsCounts.maxChars) + "%'>" + p2.charCount + " chars</b> ";
+      a += "<b id='" + key + "_part_2_lines' style='width:" + (100 * p2.lineCount / funsJsCounts.maxLines) + "%' title='" + Math.round(100 * p2.lineCount / funsJsCounts.maxLines) + "%'>" + p2.lineCount + " lines</b>";
       a += "</li></ol></li>";
     }
     return a;
-  }, "<style type='text/css'>" +
-        "ol,li{display:block;margin:0 0 1em 0;padding:0;width:100%;list-style:none;font-size:smaller;}" + 
-        "b{display:block;background:#99F;font-size:smaller;line-height:3}" + 
-        "b+b{background:#F99;}" + 
-      "</style><ol>") + "</ol>";
+  }, "<ol>") + "</ol>";
 
-  app.get("/stats", function(request, response) {
-    response.send(statHtml);
+  fs.readFile(__dirname + "/views/stats.ntl", function (err, content) {
+    if (err) {
+      console.log(err);
+    }
+    const htmlTemplate = content.toString();
+    const html = GetFormattedString(htmlTemplate, { "0": statHtml });
+    app.get("/stats", function(request, response) {
+      response.send(html);
+    });
   });
 });
 
