@@ -2,6 +2,7 @@ var fs = require('fs');
 const express = require("express");
 const app = express();
 const timeout = require("connect-timeout"); //express v4
+const RateLimit = require('express-rate-limit');
 
 console.log(process.env.PROJECT_DOMAIN);
 const PROJECT_URL = `https://${process.env.PROJECT_DOMAIN}.glitch.me/`;
@@ -38,6 +39,14 @@ fs.readFile(__dirname + "/views/day.ntl", function (err, content) {
   }
   dayTemplate = content.toString();
 });
+
+// set up rate limiter: maximum of five requests per minute
+const limiter = new RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 5
+});
+// apply rate limiter to all requests
+app.use(limiter);
 
 // this template-replacer code keeps working
 const keyFinder = /\{\{(\w+)\}\}/ig;

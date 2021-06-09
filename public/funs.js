@@ -31,7 +31,7 @@
         for (let i = 0; i < l; i++) {
           for (let j = i + 1; j < l; j++) {
             for (let k = j + 1; k < l; k++) {
-              if (i !== j !== k) {
+              if (i !== j && j !== k) {
                 if (list[i] + list[j] + list[k] === end) {
                   product = list[i] * list[j] * list[k];
                   break;
@@ -1028,17 +1028,17 @@
           /*W:*/ [-1,  0]
         ];
         let d = 1; // E
-        let dir = D[d];  // E
+        let dir = null;  // E
         
         for (let i = 0; i < l; i++) {
           let cmd = input[i];
           //console.log("command: ", cmd, " direction: ", d, " delta: ", dir);
           if (cmd.action === 'R') { //CW
             d = (d + (cmd.value / 90)) % 4;
-            dir = D[d];
+            //dir = D[d];
           } else if (cmd.action === 'L') { // CCW
             d = (d + ((360 - cmd.value) / 90)) % 4;
-            dir = D[d];
+            //dir = D[d];
           } else if (cmd.action === 'N') {
             dir = D[0];
             pos.x += (cmd.value * dir[0]);
@@ -1850,7 +1850,7 @@
           }
           //console.log("newState: ", newState);
           state = newState;
-          sl = state.length;
+          //sl = state.length;
           //break;
         }
         
@@ -2237,7 +2237,7 @@
         });
         const il = input.length;
         console.log("input length: " + il);
-        const dirs = ["north", "east", "south", "west"];
+        //const dirs = ["north", "east", "south", "west"];
         const nums = ["vn", "vrn", "ve", "vre", "vs", "vrs", "vw", "vrw"];
         const rots = ["twelve", "three", "six", "nine"];
         
@@ -2275,8 +2275,8 @@
         console.log(input);
         
         const transform = (tx) => {
-          const o = input[tx.i];
-          const r = tx.rot;
+          //const o = input[tx.i];
+          //const r = tx.rot;
         };
         const check = (match, matchedIndeces) => {
           //transform tile for the match in self, 
@@ -2358,7 +2358,7 @@
         }, { allergens: {}, ingredients: {} });
         console.log(counts);
         
-        let temp = Object.keys(ingredients);
+        //let temp = Object.keys(ingredients);
         
         const filter = allergens.reduce((acc, a) => {
           const sub = input.filter(item => item.allergens.includes(a));
@@ -2384,7 +2384,7 @@
           const sub = input.filter(item => item.allergens.includes(a));
           const not = input.filter(item => !item.allergens.includes(a));
           const included = sub.map(m => m.ingredients);
-          const excluded = not.map(m => m.ingredients);
+          //const excluded = not.map(m => m.ingredients);
           included.forEach((x,i) => x.forEach(ing => {
             if (included.some((ex, i2) => (i!==i2) && ex.includes(ing))) {
               acc.included.push(ing);
@@ -2448,7 +2448,7 @@
           const key = p1.join(",") + ":" + p1.join(",");
           // shortcut
           if (typeof cache[key] === "number") {
-            return cache[key]
+            return cache[key];
           }
           while (safety-- > 0 && p1.length && p2.length) {
             const card1 = p1.shift();
@@ -2548,7 +2548,7 @@
           //console.log(output);
 
           let nextIndex = findNextIndex(currentValue);
-          const newValue = output[nextIndex];
+          //const newValue = output[nextIndex];
           //console.log("destination", nextIndex, newValue);
           const left = output.slice(0, nextIndex + 1);
           const right = output.slice(nextIndex + 1);
@@ -2630,7 +2630,7 @@
           //console.log(output);
 
           let nextIndex = findNextIndex(currentValue);
-          const newValue = output[nextIndex];
+          //const newValue = output[nextIndex];
           //console.log("destination", nextIndex, newValue);
           const left = output.slice(0, nextIndex + 1);
           const right = output.slice(nextIndex + 1);
@@ -2817,7 +2817,7 @@
           console.log(blank);
         };
         
-        let current = { x: 0, y: 0 };
+        let current;  //{ x: 0, y: 0 };
         for (let i = 0; i < il; i++) {
           current = { x: 0, y: 0 };
           const line = input[i];
