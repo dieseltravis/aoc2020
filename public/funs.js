@@ -2382,7 +2382,7 @@
         
         const filter2 = allergens.reduce((acc, a) => {
           const sub = input.filter(item => item.allergens.includes(a));
-          const not = input.filter(item => !item.allergens.includes(a));
+          //const not = input.filter(item => !item.allergens.includes(a));
           const included = sub.map(m => m.ingredients);
           //const excluded = not.map(m => m.ingredients);
           included.forEach((x,i) => x.forEach(ing => {
