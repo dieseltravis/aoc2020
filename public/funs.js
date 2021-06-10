@@ -1087,7 +1087,7 @@
           /*W:*/ [-1,  0]
         ];
         let d = 1; // E
-        let dir = D[d];  // E
+        let dir;  // E
         let way = { dx: 10, dy: -1 };
         const rotate = q => {
           if (q === 1) {
@@ -2303,12 +2303,15 @@
     },
     day21: {
       part1: data => {
-        const rx = /((?:\w+\s)+)\(contains\s((?:\w+,?\s?)+)\)/;
+        // split regex into 2 parts to prevent potential backtracking with \w+
+        const rx1 = /((?:\w+\s)+)\(contains/;
+        const rx2 = /\(contains\s((?:\w+,?\s?)+)\)/;
         const input = data.trim().split("\n").map(m => {
-          const matched = m.match(rx);
+          const matched1 = m.match(rx1);
+          const matched2 = m.match(rx2);
           return {
-            ingredients: matched[1].trim().split(" "),
-            allergens: matched[2].split(",").map(a => a.trim())
+            ingredients: matched1[1].trim().split(" "),
+            allergens: matched2[1].split(",").map(a => a.trim())
           };
         });
         const il = input.length;
