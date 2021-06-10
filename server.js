@@ -11,17 +11,22 @@ console.log(PROJECT_URL);
 // run the same functions on the front & back
 const f = require("./public/funs");
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static("public"));
-
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function(request, response) {
-  response.sendFile(__dirname + "/views/index.html");
+// set up rate limiter: maximum of ten requests per minute
+const limiter = new RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10
 });
 
 app.use(timeout(1200000));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// apply rate limiter to all requests
+app.use(limiter);
+app.use(express.static("public"));
+
+app.get("/", function(request, response) {
+  response.sendFile(__dirname + "/views/index.html");
+});
 
 const year = 2020;
 const days = [ "zero",
@@ -39,14 +44,6 @@ fs.readFile(__dirname + "/views/day.ntl", function (err, content) {
   }
   dayTemplate = content.toString();
 });
-
-// set up rate limiter: maximum of five requests per minute
-const limiter = new RateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 5
-});
-// apply rate limiter to all requests
-app.use(limiter);
 
 // this template-replacer code keeps working
 const keyFinder = /\{\{(\w+)\}\}/ig;
