@@ -1086,7 +1086,7 @@
           /*S:*/ [ 0,  1],
           /*W:*/ [-1,  0]
         ];
-        let d = 1; // E
+        //let d = 1; // E
         let dir;  // E
         let way = { dx: 10, dy: -1 };
         const rotate = q => {
