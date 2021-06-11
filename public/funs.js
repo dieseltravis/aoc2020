@@ -2305,7 +2305,7 @@
       part1: data => {
         // split regex into 2 parts to prevent potential backtracking with \w+
         const rx1 = /((?:\w+\s)+)\(contains/;
-        const rx2 = /\(contains\s((?:\w+,?\s?)+)\)/;
+        const rx2 = /\(contains\s((?:\w+\b,?\s?)+)\)/;
         const input = data.trim().split("\n").map(m => {
           const matched1 = m.match(rx1);
           const matched2 = m.match(rx2);
