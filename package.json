@@ -11,10 +11,9 @@
   "dependencies": {
     "connect-timeout": "^1.9.0",
     "express": "^4.17.1",
-    "express-rate-limit": "^5.2.6"
-  },
-  "engines": {
-    "node": "8.x"
+    "express-rate-limit": "^5.2.6",
+    "semistandard": "^16.0.0",
+    "eslint": "^7.28.0"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/open-lovely-doom"
