@@ -5,13 +5,18 @@
   "author": "Travis Hardiman",
   "homepage": "https://open-lovely-doom.glitch.me/",
   "main": "server.js",
+  "devDependencies": {
+    "semistandard": "*"
+  },
   "scripts": {
+    "test": "semistandard",
     "start": "node server.js"
   },
   "dependencies": {
     "connect-timeout": "^1.9.0",
     "express": "^4.17.1",
-    "express-rate-limit": "^5.2.6"
+    "express-rate-limit": "^5.2.6",
+    "semistandard": "^16.0.0"
   },
   "repository": {
     "url": "https://glitch.com/edit/#!/open-lovely-doom"
@@ -30,8 +35,5 @@
     "not IE 11",
     "supports es6-module",
     "maintained node versions"
-  ],
-  "devDependencies": {
-    "eslint": "^7.28.0"
-  }
+  ]
 }
