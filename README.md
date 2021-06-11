@@ -4,7 +4,7 @@ my 2020 solutions on glitch: [open-lovely-doom](https://open-lovely-doom.glitch.
 
 also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/alerts/) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/context:javascript)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/alerts/) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/context:javascript) [![node dependencies](https://david-dm.org/dieseltravis/aoc2020.svg)](https://david-dm.org/dieseltravis/aoc2020)
 
 ## solutions:
 

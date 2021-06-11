@@ -13,9 +13,6 @@
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.6"
   },
-  "engines": {
-    "node": "8.x"
-  },
   "repository": {
     "url": "https://glitch.com/edit/#!/open-lovely-doom"
   },
@@ -33,5 +30,8 @@
     "not IE 11",
     "supports es6-module",
     "maintained node versions"
-  ]
+  ],
+  "devDependencies": {
+    "eslint": "^7.28.0"
+  }
 }
