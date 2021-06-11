@@ -5,6 +5,7 @@ my 2020 solutions on glitch: [open-lovely-doom](https://open-lovely-doom.glitch.
 also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/alerts/) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/context:javascript)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020?ref=badge_shield)
 
 ## solutions:
 
@@ -51,3 +52,7 @@ also on github: [dieseltravis/aoc2018](https://github.com/dieseltravis/aoc2018)
 ## made with [Glitch](https://glitch.com/)
 
 ╰(*°▽°*)╯
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020?ref=badge_large)
