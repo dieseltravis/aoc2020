@@ -169,7 +169,7 @@ fs.readFile(path.join(__dirname, 'public/funs.js'), function (err, content) {
     return a;
   }, '<ol>') + '</ol>';
 
-  fs.readFile(__dirname + '/views/stats.ntl', function (err, content) {
+  fs.readFile(path.join(__dirname, 'views/stats.ntl'), function (err, content) {
     if (err) {
       console.log(err);
     }
