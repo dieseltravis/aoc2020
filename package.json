@@ -6,6 +6,7 @@
   "homepage": "https://open-lovely-doom.glitch.me/",
   "main": "server.js",
   "scripts": {
+    "test": "node --check server.js",
     "start": "node server.js"
   },
   "dependencies": {
