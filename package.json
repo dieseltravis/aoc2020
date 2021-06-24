@@ -6,7 +6,7 @@
   "homepage": "https://open-lovely-doom.glitch.me/",
   "main": "server.js",
   "scripts": {
-    "test": "node --check server.js",
+    "test": "node --check server.js && semistandard && eslint server.js public/*.js",
     "start": "node server.js"
   },
   "dependencies": {

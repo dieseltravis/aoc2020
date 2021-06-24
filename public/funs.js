@@ -251,7 +251,7 @@
           hcl: v => { return /^#[0-9a-f]{6}$/.test(v); },
           ecl: v => { return eyes.includes(v); },
           pid: v => { return /^\d{9}$/.test(v); },
-          cid: v => { return true; }
+          cid: () => { return true; }
         };
 
         let valid = 0;
@@ -2061,7 +2061,7 @@
           for (let l = ass.length; l--;) {
             const amm = rules[ass[l].index].vals;
             for (let ll = amm.length; ll--;) {
-              if (amm[ll].every(mm => mm => {
+              if (amm[ll].every(mm => {
                 const mmm = typeof mm;
                 return mmm === 'string' || mmm === 'object';
               })) {
@@ -2137,7 +2137,7 @@
         console.log(sum);
         return sum;
       },
-      part2: data => {
+      part2: () => {
 
       }
     },
@@ -2273,12 +2273,14 @@
         console.log(input);
 
         const transform = (tx) => {
+          console.log(tx);
           // const o = input[tx.i];
           // const r = tx.rot;
         };
         const check = (match, matchedIndeces) => {
           // transform tile for the match in self,
           transform(match.self);
+          console.log(matchedIndeces);
           // check matches of other for matching orientation where not in matched indeces
         };
         for (let i = 0; i < il; i++) {
@@ -2295,7 +2297,7 @@
 
         // TODO:
       },
-      part2: data => {
+      part2: () => {
         // TODO:
       }
     },
@@ -2398,7 +2400,7 @@
         console.log(filter2);
         // nope
       },
-      part2: data => {
+      part2: () => {
         // Player 1:
         // 25
         // 37
@@ -2884,38 +2886,38 @@
         // const sevens = [];
         let safety = 10000000;
         let loop = 1;
-        let card_loop = 0;
-        let door_loop = 0;
+        let cardLoop = 0;
+        let doorLoop = 0;
         while (safety--) {
           const seven = transform(7, loop);
           if (seven === card) {
-            card_loop = loop;
+            cardLoop = loop;
           }
           if (seven === door) {
-            door_loop = loop;
+            doorLoop = loop;
           }
-          if (card_loop > 0 && door_loop > 0) {
+          if (cardLoop > 0 && doorLoop > 0) {
             break;
           }
           loop++;
         }
 
-        console.log(card_loop, door_loop);
+        console.log(cardLoop, doorLoop);
 
         if (safety <= 0) {
           console.warn('SAFETY hit!');
           // throw ("safety.");
         }
 
-        const card_num = transform(card, door_loop);
-        const door_num = transform(door, card_loop);
+        const cardNum = transform(card, doorLoop);
+        const doorNum = transform(door, cardLoop);
 
-        const result = card_num + ',' + door_num;
+        const result = cardNum + ',' + doorNum;
         // if these are the same number then it "works"
         console.log(result);
         return result;
       },
-      part2: data => {
+      part2: () => {
         // I guess I have to finish all the other parts first?
       }
     }
