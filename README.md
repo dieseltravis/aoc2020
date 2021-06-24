@@ -4,7 +4,9 @@ my 2020 solutions on glitch: [open-lovely-doom](https://open-lovely-doom.glitch.
 
 also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 
-[![Node.js CI](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml/badge.svg)](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml) [![Total alerts](https://img.shields.io/lgtm/alerts/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/alerts/) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/context:javascript) [![node dependencies](https://david-dm.org/dieseltravis/aoc2020.svg)](https://david-dm.org/dieseltravis/aoc2020) [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/standard/semistandard) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020?ref=badge_shield)
+![Days completed in a row](https://img.shields.io/badge/days%20in%20a%20row-18-informational?style=plastic)
+[![Node.js CI](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml/badge.svg)](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml) [![Total alerts](https://img.shields.io/lgtm/alerts/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/alerts/) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/context:javascript) 
+[![node dependencies](https://david-dm.org/dieseltravis/aoc2020.svg)](https://david-dm.org/dieseltravis/aoc2020) [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/standard/semistandard) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020?ref=badge_shield)
 
 ## solutions:
 
@@ -51,7 +53,6 @@ also on github: [dieseltravis/aoc2018](https://github.com/dieseltravis/aoc2018)
 ## made with [Glitch](https://glitch.com/)
 
 ╰(*°▽°*)╯
-
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020?ref=badge_large)
