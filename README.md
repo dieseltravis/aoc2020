@@ -4,9 +4,11 @@ my 2020 solutions on glitch: [open-lovely-doom](https://open-lovely-doom.glitch.
 
 also on github: [dieseltravis/aoc2020](https://github.com/dieseltravis/aoc2020)
 
-![Days completed in a row](https://img.shields.io/badge/days%20in%20a%20row-18-informational?style=plastic) [![glitch](https://shields.io/badge/glitch-%F0%9F%91%8D%F0%9F%8E%8F-blue?logo=glitch&style=plastic&logoColor=violet)](https://glitch.com/)
-[![Node.js CI](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml/badge.svg)](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml) [![Total alerts](https://img.shields.io/lgtm/alerts/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/alerts/) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/context:javascript) 
-[![node dependencies](https://david-dm.org/dieseltravis/aoc2020.svg)](https://david-dm.org/dieseltravis/aoc2020) [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?style=flat-square)](https://github.com/standard/semistandard) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020?ref=badge_shield)
+[![Days completed in a row](https://img.shields.io/badge/⭐%20days%20in%20a%20row-18-blueviolet)](https://adventofcode.com/2020/) [![glitch](https://shields.io/badge/glitch-%F0%9F%91%8D%F0%9F%8E%8F-blue?logo=glitch&logoColor=violet)](https://glitch.com/)
+
+[![Node.js CI](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml/badge.svg)](https://github.com/dieseltravis/aoc2020/actions/workflows/node.js.yml) [![Total alerts](https://img.shields.io/lgtm/alerts/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/alerts/) [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/dieseltravis/aoc2020.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dieseltravis/aoc2020/context:javascript)
+
+[![node dependencies](https://david-dm.org/dieseltravis/aoc2020.svg)](https://david-dm.org/dieseltravis/aoc2020) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdieseltravis%2Faoc2020?ref=badge_shield) [![js-semistandard-style](https://img.shields.io/badge/code%20style-semistandard-brightgreen.svg?logo=javascript)](https://github.com/standard/semistandard)
 
 ## solutions:
 
